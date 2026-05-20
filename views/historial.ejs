@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial - Código de barras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-dark text-light min-vh-100">
+
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 text-primary">Historial de Artículos</h1>
+            <a href="/escaneo" class="btn btn-danger px-4">Volver</a>
+        </div>
+
+        <!-- Tabla de artículos -->
+        <div id="contenedor-productos" class="table-responsive bg-secondary bg-opacity-10 rounded shadow">
+            <table class="table table-dark table-hover mb-0">
+                <thead class="table-primary">
+                    <tr>
+                        <th class="px-4 py-3">ID</th>
+                        <th class="px-4 py-3">Nombre</th>
+                        <th class="px-4 py-3">Categoría</th>
+                        <th class="px-4 py-3">Stock</th>
+                        <th class="px-4 py-3">Precio</th>
+                        <th class="px-4 py-3 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% articulos.forEach(articulo=> { %>
+                        <tr id="row-<%= articulo.id_producto %>" class="align-middle">
+                            <td class="px-4">
+                                <%= articulo.id_producto %>
+                            </td>
+                            <td class="px-4">
+                                <%= articulo.nombre %>
+                            </td>
+                            <td class="px-4">
+                                <%= articulo.categoria || '-' %>
+                            </td>
+                            <td class="px-4">
+                                <span class="badge bg-primary fs-6" id="stock-<%= articulo.id_producto %>">
+                                    <%= articulo.stock %>
+                                </span>
+                            </td>
+                            <td class="px-4">$<%= articulo.precio || '-' %>
+                            </td>
+                            <td class="px-4 text-center">
+                                <a  href="/disminuir/<%= articulo.id_producto %>" class="btn btn-sm btn-danger boton-disminuir"
+                                    data-id="<%= articulo.id_producto %>">
+                                    -1
+                                </a>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Por si no hay artículos-->
+        <% if (articulos.length===0) { %>
+            <div class="text-center text-secondary mt-5 h4">
+                No hay artículos registrados
+            </div>
+            <% } %>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
