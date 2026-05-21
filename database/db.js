@@ -6,6 +6,7 @@ const conexion = mysql.createConnection({host: process.env.MYSQLHOST,
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
     port: process.env.MYSQLPORT
+    console.log("DEBUG VARIABLES:", process.env.MYSQLHOST, process.env.MYSQLPORT);
 });
 
 // Conectar a la base de datos
