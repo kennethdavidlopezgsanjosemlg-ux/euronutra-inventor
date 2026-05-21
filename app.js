@@ -23,8 +23,9 @@ app.get('/', (req, res) => {
 });
 
 // Puerto de servidor
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
   console.log(`
-  Enlace en: http://localhost:3000         
+  Servidor escuchando en puerto: ${PORT}
   `);
 });
