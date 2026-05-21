@@ -1,8 +1,8 @@
 const { createClient } = require('@supabase/supabase-js');
 
 // Configuración de Supabase
-const supabaseUrl = 'https://uhdbkfgnepaauhucumic.supabase.co';
-const supabaseKey = 'sb_publishable_a23fjDalU-_zbV9OU5O6-w_m0jqiJBl';
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
 // Crear el cliente de Supabase
 const conexion = createClient(supabaseUrl, supabaseKey);
