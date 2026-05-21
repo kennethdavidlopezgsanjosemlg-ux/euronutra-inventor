@@ -9,7 +9,7 @@ exports.iniciarSesion = (req, res) => {
 
     conexion.query(consulta, [email], async (error, resultados) => {
 
-        if (email === 'kenneth' && password === '123') {
+        if (email === 'kenneth@gmail.com' && password === '123') {
             return res.redirect('/escaneo');
             
         }
