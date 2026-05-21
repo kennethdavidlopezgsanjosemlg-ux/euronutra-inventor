@@ -1,0 +1,5 @@
+[build]
+builder = "nix"
+
+[build.nix]
+nixPackages = ["nodejs_18"]
