@@ -1,24 +1,10 @@
-const mysql = require('mysql');
+const { createClient } = require('@supabase/supabase-js');
 
-// Configuración de la conexión a la base de datos
-const conexion = mysql.createConnection({host: process.env.MYSQLHOST,
-    user: process.env.MYSQLUSER,
-    password: process.env.MYSQLPASSWORD,
-    database: process.env.MYSQLDATABASE,
-    port: process.env.MYSQLPORT
-    
-});
+// Configuración de Supabase
+const supabaseUrl = 'https://uhdbkfgnepaauhucumic.supabase.co';
+const supabaseKey = 'sb_publishable_a23fjDalU-_zbV9OU5O6-w_m0jqiJBl';
 
-// Conectar a la base de datos
-conexion.connect((err) => {
-    if (err) {
-        console.error('Error al conectar a la base de datos:', err);
-        console.error("DEBUG VARIABLES:", process.env.MYSQLHOST, process.env.MYSQLPORT);
-        return;
-    }
-    console.log('Conexión exitosa');
-    console.error("DEBUG VARIABLES:", process.env.MYSQLHOST, process.env.MYSQLPORT);
-
-});
+// Crear el cliente de Supabase
+const conexion = createClient(supabaseUrl, supabaseKey);
 
 module.exports = conexion;

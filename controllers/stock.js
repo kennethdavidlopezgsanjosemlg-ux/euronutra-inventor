@@ -3,41 +3,46 @@ const conexion = require('../database/db');
 // Controlador para hacer las operaciones de stock y obtener productos
 
 // Controlador para obtener productos
-exports.obtenerProductos = (req, res) => {
-  const consulta = 'SELECT * FROM articulo';
-  conexion.query(consulta, (error, resultados) => {
-    if (error) {
-      console.error('Error al obtener productos:', error);
-      return res.status(500).json({ 'Error al obtener los productos': error });
-    }
-    res.json(resultados);
-  });
+exports.obtenerProductos = async (req, res) => {
+  const { data, error } = await conexion
+    .from('articulo')
+    .select('*');
+
+  if (error) {
+    console.error('Error al obtener productos:', error);
+    return res.status(500).json({ 'Error al obtener los productos': error.message });
+  }
+  res.json(data);
 };
 
 // Controlador para actualizar el stock, que aumenta en 1 
-exports.actualizarStock = (req, res) => {
+exports.actualizarStock = async (req, res) => {
   const { idProducto } = req.body;
 
-  const consultaSeleccion = 'SELECT stock FROM articulo WHERE id_producto = ?';
-  conexion.query(consultaSeleccion, [idProducto], (error, resultados) => {
-    if (error) {
-      console.error('Error al obtener los datos de los productos:', error);
-      return res.status(500).json({ error: 'Error al obtener los datos de los productos' });
-    }
+  // Obtenemos el producto para saber su stock actual
+  const { data: producto, error: errorFetch } = await conexion
+    .from('articulo')
+    .select('stock')
+    .eq('id_producto', idProducto)
+    .single();
 
-    if (resultados.length === 0) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
-    }
+  if (errorFetch || !producto) {
+    console.error('Error al obtener el producto:', errorFetch);
+    return res.status(404).json({ error: 'Producto no encontrado' });
+  }
 
-    const nuevoStock = resultados[0].stock + 1;
+  const nuevoStock = (producto.stock || 0) + 1;
 
-    const consultaUpdateStock = 'UPDATE articulo SET stock = ? WHERE id_producto = ?';
-    conexion.query(consultaUpdateStock, [nuevoStock, idProducto], (error) => {
-      if (error) {
-        console.error('Error al actualizar stock:', error);
-        return res.status(500).json({ error: 'Error al actualizar stock' });
-      }
-      res.json({ idProducto, nuevoStock });
-    });
-  });
+  // Actualizamos el stock en Supabase
+  const { error: errorUpdate } = await conexion
+    .from('articulo')
+    .update({ stock: nuevoStock })
+    .eq('id_producto', idProducto);
+
+  if (errorUpdate) {
+    console.error('Error al actualizar stock:', errorUpdate);
+    return res.status(500).json({ error: 'Error al actualizar stock' });
+  }
+
+  res.json({ idProducto, nuevoStock });
 };

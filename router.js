@@ -11,14 +11,22 @@ router.post('/login', loginController.iniciarSesion);
 
 
 // pagina de historial, cargamos los datos de la tabla articulo y los pasamos a la vista historial.ejs
-router.get('/historial', (req, res) => {
-    conexion.query('SELECT * FROM articulo', (err, resultados) => {
-        if (err) {
-            console.error('Error al cargar historial:', err);
+router.get('/historial', async (req, res) => {
+    try {
+        const { data, error } = await conexion
+            .from('articulo')
+            .select('*');
+
+        if (error) {
+            console.error('Error al cargar historial:', error);
             return res.status(500).send('Error fallido al cargar historial');
         }
-        res.render('historial', { articulos: resultados }); // Renderiza historial.ejs
-    });
+
+        res.render('historial', { articulos: data });
+    } catch (error) {
+        console.error('Error inesperado al cargar historial:', error);
+        res.status(500).send('Error fallido al cargar historial');
+    }
 });
 
 //página de escaneo
@@ -27,16 +35,37 @@ router.get('/escaneo', (req, res) => {
 });
 
 // disminuir stock desde el historial, con el id del producto
-router.get('/disminuir/:id', (req, res) => {
+router.get('/disminuir/:id', async (req, res) => {
     const idProducto = req.params.id;
-    const consulta = 'UPDATE articulo SET stock = stock - 1 WHERE id_producto = ?';
-    conexion.query(consulta, [idProducto], (error, resultados) => {
-        if (error) {
-            console.error('Error al disminuir stock:', error);
+
+    try {
+        const { data: producto, error: errorFetch } = await conexion
+            .from('articulo')
+            .select('stock')
+            .eq('id_producto', idProducto)
+            .single();
+
+        if (errorFetch || !producto) {
+            console.error('Error al obtener el producto:', errorFetch);
+            return res.status(404).send('Producto no encontrado');
+        }
+
+        const nuevoStock = Math.max((producto.stock || 0) - 1, 0);
+        const { error: errorUpdate } = await conexion
+            .from('articulo')
+            .update({ stock: nuevoStock })
+            .eq('id_producto', idProducto);
+
+        if (errorUpdate) {
+            console.error('Error al disminuir stock:', errorUpdate);
             return res.status(500).send('Error al disminuir stock');
         }
+
         res.redirect('/historial');
-    });
+    } catch (error) {
+        console.error('Error inesperado al disminuir stock:', error);
+        res.status(500).send('Error al disminuir stock');
+    }
 });
 
 
