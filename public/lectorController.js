@@ -101,6 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
         iniciarEscaner();
     } else {
         lectorPlaceholder.style.display = 'flex';
-        console.log('Cámara desactivada por configuración inicial');
+        console.log('Cámara desactivada');
     }
 });

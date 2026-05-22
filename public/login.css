@@ -1,15 +1,11 @@
 body {
-  /* Usamos colores mucho más cercanos para evitar el efecto "discoteca" */
-  /* Azul muy oscuro -> Azul noche -> Gris azulado oscuro -> Azul profundo */
   background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #1e293b);
   background-size: 300% 300%;
   
-  /* Animación mucho más lenta (30s en lugar de 15s) */
   animation: gradientBody 30s ease infinite;
   
   min-height: 100vh;
   margin: 0;
-  /* Asegura que el color de fondo base sea oscuro por si acaso */
   background-color: #0f172a; 
 }
 
