@@ -6,7 +6,8 @@ const conexion = require('../database/db');
 exports.obtenerProductos = async (req, res) => {
   const { data, error } = await conexion
     .from('articulo')
-    .select('*');
+    .select('*')
+    .order('id_producto', { ascending: true });
 
   if (error) {
     console.error('Error al obtener productos:', error);
