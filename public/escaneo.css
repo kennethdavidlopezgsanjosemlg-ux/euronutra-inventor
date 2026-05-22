@@ -20,6 +20,14 @@
      z-index: 1;
  }
 
+ .lector-placeholder-img {
+     max-width: 100%;
+     max-height: 100%;
+     object-fit: contain;
+     border-radius: 8px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+ }
+
  #lector-placeholder.hidden {
      opacity: 0;
      pointer-events: none;
