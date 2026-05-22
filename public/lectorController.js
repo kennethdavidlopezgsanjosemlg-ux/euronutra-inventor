@@ -90,4 +90,11 @@ toggleCamara.addEventListener('change', async function () {
     }
 });
 
-document.addEventListener("DOMContentLoaded", iniciarEscaner);
+document.addEventListener("DOMContentLoaded", () => {
+    // Solo iniciamos el escáner si el switch NO está marcado (cámara activa)
+    if (!toggleCamara.checked) {
+        iniciarEscaner();
+    } else {
+        console.log('Cámara desactivada por configuración inicial');
+    }
+});
