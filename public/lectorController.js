@@ -1,5 +1,6 @@
 const notificacion = document.getElementById('notificacion');
 const textoDetectado = document.getElementById('textoDetectado');
+const toggleCamara = document.getElementById('toggle-camara');
 
 let escaneoBloqueado = false;
 let lector;
@@ -74,5 +75,19 @@ async function manejarDeteccion(valor) {
         escaneoBloqueado = false;
     }, 3000);
 }
+
+// Escuchar cambios en el switch para apagar o encender la cámara
+toggleCamara.addEventListener('change', async function () {
+    if (this.checked) {
+        // Si el switch está activo, desactivamos la cámara
+        if (lector) {
+            await lector.stop().catch(err => console.error("Error al detener:", err));
+            console.log('Cámara desactivada');
+        }
+    } else {
+        // Si el switch se desactiva, volvemos a iniciar la cámara
+        iniciarEscaner();
+    }
+});
 
 document.addEventListener("DOMContentLoaded", iniciarEscaner);
