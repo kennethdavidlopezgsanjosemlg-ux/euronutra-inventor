@@ -9,18 +9,26 @@
 </head>
 
 <style>
-  .bg-gradient-animated {
-    background: linear-gradient(-45deg, #1e3c72, #2a5298, #00d2ff, #9d50bb);
-    background-size: 400% 400%;
-    animation: gradientBody 15s ease infinite;
-    min-height: 100vh;
-  }
+body {
+  /* Fondo base azul oscuro por si la animación no carga */
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+  
+  /* Gradiente animado */
+  background: linear-gradient(-45deg, #1e3c72, #2a5298, #00d2ff, #9d50bb);
+  background-size: 400% 400%;
+  animation: gradientBody 15s ease infinite;
+  
+  /* Asegura que cubra toda la pantalla */
+  min-height: 100vh;
+  margin: 0;
+}
 
-  @keyframes gradientBody {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+@keyframes gradientBody {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 </style>
 
 <body class="bg-dark text-light min-vh-100">
@@ -40,7 +48,7 @@
                         <th class="px-4 py-3">Nombre</th>
                         <th class="px-4 py-3">Categoría</th>
                         <th class="px-4 py-3">Stock</th>
-                        <th class="px-4 py-3 text-center">Acciones</th>
+                        <th class="px-4 py-3 text-center">Quitar Stock</th>
                     </tr>
                 </thead>
                 <tbody>
