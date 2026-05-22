@@ -77,24 +77,30 @@ async function manejarDeteccion(valor) {
 }
 
 // Escuchar cambios en el switch para apagar o encender la cámara
+const lectorPlaceholder = document.getElementById('lector-placeholder');
+
 toggleCamara.addEventListener('change', async function () {
     if (this.checked) {
-        // Si el switch está activo, desactivamos la cámara
+        // Si el switch está activo, desactivamos la cámara y mostramos el placeholder
         if (lector) {
             await lector.stop().catch(err => console.error("Error al detener:", err));
             console.log('Cámara desactivada');
         }
+        lectorPlaceholder.style.display = 'flex';
     } else {
-        // Si el switch se desactiva, volvemos a iniciar la cámara
+        // Si el switch se desactiva, volvemos a iniciar la cámara y ocultamos el placeholder
+        lectorPlaceholder.style.display = 'none';
         iniciarEscaner();
     }
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Solo iniciamos el escáner si el switch NO está marcado (cámara activa)
+    // Mostrar u ocultar placeholder según el estado del switch
     if (!toggleCamara.checked) {
+        lectorPlaceholder.style.display = 'none';
         iniciarEscaner();
     } else {
+        lectorPlaceholder.style.display = 'flex';
         console.log('Cámara desactivada por configuración inicial');
     }
 });

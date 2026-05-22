@@ -1,5 +1,28 @@
  #lector video {
      object-fit: cover;
+     width: 100%;
+     height: 100%;
+ }
+
+ #lector-placeholder {
+     position: absolute;
+     inset: 0;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     background-color: #000;
+     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 15px 40px rgba(0, 0, 0, 0.45);
+     color: #d1d5db;
+     font-size: 1rem;
+     text-align: center;
+     padding: 1rem;
+     transition: opacity 0.3s ease;
+     z-index: 1;
+ }
+
+ #lector-placeholder.hidden {
+     opacity: 0;
+     pointer-events: none;
  }
 
  /* Ocultar elementos técnicos de la librería html5-qrcode */
@@ -13,7 +36,7 @@
      display: flex;
      justify-content: center;
      align-items: center;
-
+     position: relative;
  }
 
  body {
