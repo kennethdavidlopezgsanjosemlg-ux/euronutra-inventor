@@ -11,20 +11,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 
-<style>
 body {
-  /* Fondo base azul oscuro por si la animación no carga */
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
-  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+  /* Usamos colores mucho más cercanos para evitar el efecto "discoteca" */
+  /* Azul muy oscuro -> Azul noche -> Gris azulado oscuro -> Azul profundo */
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #1e293b);
+  background-size: 300% 300%;
   
-  /* Gradiente animado */
-  background: linear-gradient(-45deg, #1e3c72, #2a5298, #00d2ff, #9d50bb);
-  background-size: 400% 400%;
-  animation: gradientBody 15s ease infinite;
+  /* Animación mucho más lenta (30s en lugar de 15s) */
+  animation: gradientBody 30s ease infinite;
   
-  /* Asegura que cubra toda la pantalla */
   min-height: 100vh;
   margin: 0;
+  /* Asegura que el color de fondo base sea oscuro por si acaso */
+  background-color: #0f172a; 
 }
 
 @keyframes gradientBody {
@@ -32,7 +31,6 @@ body {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-</style>
 
 <body class="bg-dark text-light">
 
