@@ -13,7 +13,21 @@
 
     <div class="container py-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h2 text-primary">Historial de Artículos</h1>
+            <div>
+                <h1 class="h2 text-primary mb-2">Historial de Artículos</h1>
+                <div class="filter-container">
+                    <button title="filter" class="filter" type="button">
+                        <svg viewBox="0 0 512 512" height="1em" aria-hidden="true">
+                            <path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"></path>
+                        </svg>
+                    </button>
+                    <div class="orden-dropdown">
+                        <button type="button" class="orden-item" data-sort="mayor-stock">Mayor stock</button>
+                        <button type="button" class="orden-item" data-sort="menor-stock">Menor stock</button>
+                        <button type="button" class="orden-item" data-sort="id">Por ID</button>
+                    </div>
+                </div>
+            </div>
             <a href="/escaneo" class="btn btn-danger px-4">Volver</a>
         </div>
 
@@ -31,7 +45,7 @@
                 </thead>
                 <tbody>
                     <% articulos.forEach(articulo=> { %>
-                        <tr id="row-<%= articulo.id_producto %>" class="align-middle">
+                        <tr id="row-<%= articulo.id_producto %>" class="align-middle" data-stock="<%= articulo.stock %>" data-id="<%= articulo.id_producto %>">
                             <td class="px-4">
                                 <%= articulo.id_producto %>
                             </td>
@@ -67,6 +81,31 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const ordenItems = document.querySelectorAll('.orden-item');
+        const tbody = document.querySelector('#contenedor-productos tbody');
+
+        function sortRows(criteria) {
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            rows.sort((a, b) => {
+                const stockA = Number(a.dataset.stock || 0);
+                const stockB = Number(b.dataset.stock || 0);
+                const idA = Number(a.dataset.id || 0);
+                const idB = Number(b.dataset.id || 0);
+
+                if (criteria === 'mayor-stock') return stockB - stockA;
+                if (criteria === 'menor-stock') return stockA - stockB;
+                return idA - idB;
+            });
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        ordenItems.forEach(item => {
+            item.addEventListener('click', () => {
+                sortRows(item.dataset.sort);
+            });
+        });
+    </script>
 </body>
 
 </html>
