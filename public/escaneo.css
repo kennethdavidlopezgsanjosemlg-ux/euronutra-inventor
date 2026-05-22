@@ -1,0 +1,64 @@
+ #lector video {
+     object-fit: cover;
+ }
+
+ /* Ocultar elementos técnicos de la librería html5-qrcode */
+ #qr-canvas,
+ #qr-shaded-region {
+     display: none;
+ }
+
+ #contenedor-lector {
+     max-width: 500px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+
+ }
+
+ body {
+     /* Usamos colores mucho más cercanos para evitar el efecto "discoteca" */
+     /* Azul muy oscuro -> Azul noche -> Gris azulado oscuro -> Azul profundo */
+     background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #1e293b);
+     background-size: 300% 300%;
+
+     /* Animación mucho más lenta (30s en lugar de 15s) */
+     animation: gradientBody 30s ease infinite;
+
+     min-height: 100vh;
+     margin: 0;
+     /* Asegura que el color de fondo base sea oscuro por si acaso */
+     background-color: #0f172a;
+ }
+
+ @keyframes gradientBody {
+     0% {
+         background-position: 0% 50%;
+     }
+
+     50% {
+         background-position: 100% 50%;
+     }
+
+     100% {
+         background-position: 0% 50%;
+     }
+ }
+
+ .button {
+  display: inline-block;
+  background: #4285f4;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 20px 30px;
+  border-radius: 5px;
+  box-shadow: 0px 17px 10px -10px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  -webkit-transition: all ease-in-out 300ms;
+  transition: all ease-in-out 300ms;
+}
+.button:hover {
+  box-shadow: 0px 37px 20px -20px rgba(0, 0, 0, 0.2);
+  -webkit-transform: translate(0px, -10px) scale(1.2);
+          transform: translate(0px, -10px) scale(1.2);
+}
