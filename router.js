@@ -58,7 +58,9 @@ router.get('/disminuir/:id', async (req, res) => {
 
         if (errorUpdate) {
             console.error('Error al disminuir stock:', errorUpdate);
-            return res.status(500).send('Error al disminuir stock');
+            return res.status(500).send(
+                `Error al disminuir stock: ${errorUpdate.message} (${errorUpdate.code || 'sin código'})`
+            );
         }
 
         res.redirect('/historial');

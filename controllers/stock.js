@@ -41,7 +41,11 @@ exports.actualizarStock = async (req, res) => {
 
   if (errorUpdate) {
     console.error('Error al actualizar stock:', errorUpdate);
-    return res.status(500).json({ error: 'Error al actualizar stock' });
+    return res.status(500).json({
+      error: 'Error al actualizar stock',
+      detalle: errorUpdate.message,
+      codigo: errorUpdate.code
+    });
   }
 
   res.json({ idProducto, nuevoStock });
