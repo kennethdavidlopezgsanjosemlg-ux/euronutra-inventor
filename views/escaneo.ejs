@@ -16,13 +16,17 @@
 
     <div class="container-fluid min-vh-100 d-flex flex-column position-relative">
         <div class="position-absolute top-0 start-50 translate-middle-x mt-4 z-3">
-            <a class="button ">This is a button</a>
+            <a class="button">Inventario</a>
         </div>
 
-        <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+        <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
             <div id="contenedor-lector" class="w-100 ratio ratio-4x3 overflow-hidden rounded" style="max-width: 500px;">
                 <div id="lector"></div>
             </div>
+            <label class="switch mt-4">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
         </div>
 
         <div id="notificacion" class="alert alert-success fixed-bottom mb-4 mx-auto d-none shadow-lg text-center"
