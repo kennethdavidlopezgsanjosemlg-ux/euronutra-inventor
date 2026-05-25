@@ -13,9 +13,9 @@
 
 <body class="bg-dark text-light">
 
-    <div class="container-fluid min-vh-100 d-flex flex-column p-0 overflow-hidden">
+    <div class="container-fluid vh-100 d-flex flex-column p-0 overflow-hidden">
         <!-- Header minimalista -->
-        <div class="d-flex justify-content-between align-items-center p-3 z-3">
+        <div class="header-container d-flex justify-content-between align-items-center p-3">
             <a href="/seleccion" class="btn-icon-circular" title="Volver">
                 <i class="fas fa-chevron-left"></i>
             </a>
@@ -30,39 +30,41 @@
             </label>
         </div>
 
-        <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center px-3">
+        <div class="main-content flex-grow-1 d-flex flex-column justify-content-center align-items-center">
             <!-- Contenedor del Lector con guía visual -->
-            <div id="contenedor-lector" class="w-100 ratio ratio-1x1 overflow-hidden rounded-4 border-0" style="max-width: 400px; background: transparent;">
-                <div id="lector" style="background: transparent;"></div>
-                <div id="lector-placeholder" class="lector-placeholder">
-                    <div class="placeholder-content">
-                        <i class="fas fa-camera-slash mb-3 fs-1"></i>
-                        <p>Cámara desactivada</p>
+            <div class="scanner-wrapper">
+                <div id="contenedor-lector" class="rounded-4 border-0">
+                    <div id="lector"></div>
+                    <div id="lector-placeholder" class="lector-placeholder">
+                        <div class="placeholder-content">
+                            <i class="fas fa-camera-slash mb-3 fs-1"></i>
+                            <p>Cámara desactivada</p>
+                        </div>
                     </div>
-                </div>
-                <div class="scanner-guide"></div>
-                <div id="resultado-escaneo" class="resultado-overlay d-none">
-                    <div class="resultado-content">
-                        <i id="res-icon" class="fas fa-check-circle mb-2"></i>
-                        <div id="res-text"></div>
+                    <div class="scanner-guide"></div>
+                    <div id="resultado-escaneo" class="resultado-overlay d-none">
+                        <div class="resultado-content">
+                            <i id="res-icon" class="fas fa-check-circle mb-2"></i>
+                            <div id="res-text"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Selector de operación moderno -->
-            <div class="mt-5 operation-selector">
-                <input type="radio" name="operacion" id="btn-sumar" value="sumar" checked>
-                <label for="btn-sumar" class="op-btn op-sumar">
-                    <i class="fas fa-plus-circle me-2"></i> Sumar
-                </label>
+            <div class="operation-selector-container">
+                <div class="operation-selector">
+                    <input type="radio" name="operacion" id="btn-sumar" value="sumar" checked>
+                    <label for="btn-sumar" class="op-btn op-sumar">
+                        <i class="fas fa-plus-circle me-2"></i> Sumar
+                    </label>
 
-                <input type="radio" name="operacion" id="btn-restar" value="restar">
-                <label for="btn-restar" class="op-btn op-restar">
-                    <i class="fas fa-minus-circle me-2"></i> Restar
-                </label>
+                    <input type="radio" name="operacion" id="btn-restar" value="restar">
+                    <label for="btn-restar" class="op-btn op-restar">
+                        <i class="fas fa-minus-circle me-2"></i> Restar
+                    </label>
+                </div>
             </div>
-        </div>
-
         </div>
     </div>
 
