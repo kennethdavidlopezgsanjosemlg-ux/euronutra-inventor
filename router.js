@@ -37,7 +37,6 @@ router.get('/escaneo', (req, res) => {
 
 //página de selección
 router.get('/seleccion', (req, res) => {
-    console.log('Accediendo a /seleccion');
     res.render('seleccion');
 });
 
