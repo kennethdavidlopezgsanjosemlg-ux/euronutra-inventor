@@ -3,6 +3,22 @@ const resText = document.getElementById('res-text');
 const resIcon = document.getElementById('res-icon');
 const toggleCamara = document.getElementById('toggle-camara');
 const statusText = document.getElementById('status-text');
+const scannerGuide = document.querySelector('.scanner-guide');
+const operacionRadios = document.querySelectorAll('input[name="operacion"]');
+
+function actualizarGuia() {
+    if (!scannerGuide) return;
+    const operacion = document.querySelector('input[name="operacion"]:checked').value;
+    if (operacion === 'sumar') {
+        scannerGuide.classList.add('scan-sumar');
+        scannerGuide.classList.remove('scan-restar');
+    } else {
+        scannerGuide.classList.add('scan-restar');
+        scannerGuide.classList.remove('scan-sumar');
+    }
+}
+
+operacionRadios.forEach(r => r.addEventListener('change', actualizarGuia));
 
 let escaneoBloqueado = false;
 let lector;
@@ -97,7 +113,7 @@ async function manejarDeteccion(valor) {
             if (respuesta.ok) {
                 const datos = await respuesta.json();
                 mostrarNotificacion(`ID ${datos.idProducto} actualizado. Stock: ${datos.nuevoStock}`, 'success');
-                actualizarStatus('Éxito');
+                actualizarStatus('Escaneado');
             } else {
                 mostrarNotificacion(`ID ${idProducto} no encontrado`, 'error');
                 actualizarStatus('No encontrado');
@@ -131,6 +147,7 @@ toggleCamara.addEventListener('change', async function () {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    actualizarGuia();
     if (toggleCamara.checked) {
         lectorPlaceholder.style.display = 'none';
         iniciarEscaner();

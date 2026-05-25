@@ -12,27 +12,31 @@
 
 <body class="bg-dark text-light min-vh-100">
 
-    <div class="container py-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <a href="/seleccion" class="btn btn-outline-secondary btn-sm mb-2">
-                    <i class="fas fa-chevron-left"></i> Volver
-                </a>
-                <h1 class="h2 text-primary mb-2">Historial de Artículos</h1>
-                <div class="filter-container">
-                    <button title="filter" class="filter" type="button">
-                        <svg viewBox="0 0 512 512" height="1em" aria-hidden="true">
-                            <path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"></path>
-                        </svg>
-                    </button>
-                    <div class="orden-dropdown">
+    <div class="container py-4">
+        <div class="header-container d-flex justify-content-between align-items-center mb-4">
+            <a href="/seleccion" class="btn-icon-circular" title="Volver">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <div class="status-indicator">
+                <span>Historial de Artículos</span>
+            </div>
+            <a href="/escaneo" class="btn-icon-circular" title="Cámara">
+                <i class="fas fa-camera"></i>
+            </a>
+        </div>
+
+        <div class="mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="h2 text-primary mb-0 d-none d-md-block">Inventario</h1>
+        <div class="filter-container">
+                <button title="filter" class="filter-minimal-btn" type="button">
+                    <i class="fas fa-filter"></i> Filtrar
+                </button>
+                <div class="orden-dropdown">
                         <button type="button" class="orden-item" data-sort="mayor-stock">Mayor stock</button>
                         <button type="button" class="orden-item" data-sort="menor-stock">Menor stock</button>
                         <button type="button" class="orden-item" data-sort="id">Por ID</button>
-                    </div>
                 </div>
             </div>
-            <a href="/escaneo" class="btn btn-primary px-4">Cámara</a>
         </div>
 
         <!-- Tabla de artículos -->

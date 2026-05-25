@@ -13,41 +13,64 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+.filter-minimal-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-minimal-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-icon-circular {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-icon-circular:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.status-indicator {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748b;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .filter-container {
     position: relative;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-}
-
-.filter {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(0, 0, 0, 0.192);
-    cursor: pointer;
-    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.021);
-    transition: all 0.3s;
-    background-color: #ffffff;
-    color: #4d4d4d;
-}
-
-.filter svg {
-    height: 16px;
-    fill: rgb(77, 77, 77);
-    transition: all 0.3s;
-}
-
-.filter:hover {
-    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.11);
-    background-color: rgb(59, 59, 59);
-}
-
-.filter:hover svg {
-    fill: white;
 }
 
 .orden-dropdown {

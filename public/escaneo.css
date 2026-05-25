@@ -148,6 +148,21 @@
      animation: scan-vertical 2s ease-in-out infinite;
  }
 
+ .scanner-guide.scan-sumar {
+     background: #4ade80;
+     box-shadow: 0 0 15px #22c55e, 0 0 5px #fff;
+ }
+
+ .scanner-guide.scan-restar {
+     background: #f87171;
+     box-shadow: 0 0 15px #ef4444, 0 0 5px #fff;
+ }
+
+ .d-none .scanner-guide,
+ #lector-placeholder:not([style*="display: none"]) ~ .scanner-guide {
+     display: none;
+ }
+
  @keyframes scan-vertical {
      0%, 100% { transform: translate(-50%, -120px); opacity: 0; }
      10%, 90% { opacity: 1; }
