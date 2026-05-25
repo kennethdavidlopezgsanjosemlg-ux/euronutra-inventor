@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const analizadorCuerpo = require('body-parser');
 const app = express();
@@ -19,7 +20,7 @@ app.use('/', require('./router'));
 // Página principal 
 app.get('/', (req, res) => {
   const error = req.query.error;
-  res.render('login', { error }); 
+  res.render('login', { error });
 });
 
 // Puerto de servidor

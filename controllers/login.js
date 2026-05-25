@@ -19,10 +19,12 @@ exports.iniciarSesion = async (req, res) => {
         }
 
         if (!usuario) {
+            console.log('Usuario no encontrado');
             return res.redirect('/?error=auth');
         }
 
         const coinciden = await bcrypt.compare(password, usuario.password);
+        console.log('¿Contraseña coincide?:', coinciden);
         if (coinciden) {
             return res.redirect('/seleccion');
         }

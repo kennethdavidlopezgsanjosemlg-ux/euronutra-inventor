@@ -44,7 +44,12 @@ function iniciarEscaner() {
     lector = new Html5Qrcode('lector'); 
     actualizarStatus('Iniciando...');
 
-    const configuracion = { fps: 15 };
+    const configuracion = { 
+        fps: 15,
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0,
+        showQrRegionImg: false
+    };
     const alDetectar = (texto) => {
         if (escaneoBloqueado) return;
         manejarDeteccion(texto);
