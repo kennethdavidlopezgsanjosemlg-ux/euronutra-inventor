@@ -24,7 +24,7 @@ exports.iniciarSesion = async (req, res) => {
 
         const coinciden = await bcrypt.compare(password, usuario.password);
         if (coinciden) {
-            return res.redirect('/historial');
+            return res.redirect('/seleccion');
         }
 
         return res.redirect('/?error=auth');

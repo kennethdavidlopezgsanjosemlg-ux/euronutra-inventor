@@ -103,21 +103,22 @@
 
  .scanner-guide {
      position: absolute;
-     top: 50%;
-     left: 10%;
-     right: 10%;
-     height: 2px;
+     top: 10%;
+     bottom: 10%;
+     left: 50%;
+     width: 2px;
+     height: 80%;
      background: #3b82f6;
      box-shadow: 0 0 15px #3b82f6, 0 0 5px #fff;
      pointer-events: none;
      z-index: 1;
-     transform: translateY(-50%);
+     transform: translateX(-50%);
      animation: scan-horizontal 2s ease-in-out infinite;
  }
  
  @keyframes scan-horizontal {
-     0%, 100% { transform: translateY(-150px); opacity: 0.2; }
-     50% { transform: translateY(150px); opacity: 1; }
+     0%, 100% { transform: translateX(-150px); opacity: 0.2; }
+     50% { transform: translateX(150px); opacity: 1; }
  }
 
  /* Operation Selector */

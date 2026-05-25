@@ -35,6 +35,11 @@ router.get('/escaneo', (req, res) => {
     res.render('escaneo'); // Renderiza escaneo.ejs
 });
 
+//página de selección
+router.get('/seleccion', (req, res) => {
+    res.render('seleccion');
+});
+
 // disminuir stock desde el historial, con el id del producto
 router.get('/disminuir/:id', async (req, res) => {
     const idProducto = req.params.id;

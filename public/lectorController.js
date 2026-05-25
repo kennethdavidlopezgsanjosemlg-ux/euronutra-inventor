@@ -28,9 +28,11 @@ function mostrarNotificacion(mensaje, tipo = 'success') {
     
     if (resIcon) resIcon.className = `fas ${iconClass} mb-2`;
 
+    // Ya no ocultamos automáticamente después de 3s para que el resultado sea persistente
+    // hasta la próxima operación, pero desbloqueamos el escaneo para permitir nuevos escaneos.
     setTimeout(() => {
-        resultadoEscaneo.classList.add('d-none');
         escaneoBloqueado = false;
+        if (toggleCamara.checked) actualizarStatus('Cámara activa');
     }, 3000);
 }
 
@@ -50,7 +52,7 @@ function iniciarEscaner() {
         alDetectar,
         () => { }
     ).then(() => {
-        actualizarStatus('Listo');
+        actualizarStatus('Cámara activa');
     }).catch(() => {
         lector.start(
             { facingMode: 'user' },
@@ -58,7 +60,7 @@ function iniciarEscaner() {
             alDetectar,
             () => { }
         ).then(() => {
-            actualizarStatus('Listo');
+            actualizarStatus('Cámara activa');
         }).catch((error) => {
             console.error(error);
             actualizarStatus('Error');
@@ -100,7 +102,7 @@ async function manejarDeteccion(valor) {
     }
 
     setTimeout(() => {
-        if (!escaneoBloqueado) actualizarStatus('Listo');
+        if (!escaneoBloqueado && toggleCamara.checked) actualizarStatus('Cámara activa');
     }, 3000);
 }
 
