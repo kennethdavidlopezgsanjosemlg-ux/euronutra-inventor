@@ -137,9 +137,9 @@
  }
 
  @keyframes scan-vertical {
-     0%, 100% { transform: translate(-50%, -100px); opacity: 0; }
+     0%, 100% { transform: translate(-50%, -125px); opacity: 0; }
      10%, 90% { opacity: 1; }
-     50% { transform: translate(-50%, 100px); opacity: 1; }
+     50% { transform: translate(-50%, 125px); opacity: 1; }
  }
 
  /* Operation Selector */
