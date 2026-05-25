@@ -81,6 +81,7 @@
      transition: all ease-in-out 300ms;
      margin-top: 10px;
      text-decoration: none;
+     border-radius: 10px;
  }
 
  .button:hover {
@@ -89,6 +90,7 @@
      transform: translate(0px, -10px) scale(1.2);
      text-decoration: none;
      color: #ffffff;
+     border-radius: 10px;
  }
 
  .button:focus,
@@ -99,6 +101,7 @@
      transform: translate(0px, -10px) scale(1.2);
      text-decoration: none;
      color: #ffffff;
+     border-radius: 10px;
  }
 
  .switch {
