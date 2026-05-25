@@ -88,6 +88,7 @@
      -webkit-transform: translate(0px, -10px) scale(1.2);
      transform: translate(0px, -10px) scale(1.2);
      text-decoration: none;
+     color: #ffffff;
  }
 
  .button:focus,
@@ -97,6 +98,7 @@
      -webkit-transform: translate(0px, -10px) scale(1.2);
      transform: translate(0px, -10px) scale(1.2);
      text-decoration: none;
+     color: #ffffff;
  }
 
  .switch {
