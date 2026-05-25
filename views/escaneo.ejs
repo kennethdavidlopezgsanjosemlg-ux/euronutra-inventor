@@ -30,6 +30,13 @@
                 <input type="checkbox" id="toggle-camara" checked>
                 <span class="slider"></span>
             </label>
+            <div class="mt-4 btn-group" role="group" aria-label="Operación de stock">
+                <input type="radio" class="btn-check" name="operacion" id="btn-sumar" value="sumar" checked autocomplete="off">
+                <label class="btn btn-outline-success px-5 py-3 fs-4" for="btn-sumar">Sumar</label>
+              
+                <input type="radio" class="btn-check" name="operacion" id="btn-restar" value="restar" autocomplete="off">
+                <label class="btn btn-outline-danger px-5 py-3 fs-4" for="btn-restar">Restar</label>
+            </div>
         </div>
 
         <div id="notificacion" class="alert alert-success fixed-bottom mb-4 mx-auto d-none shadow-lg text-center"

@@ -16,9 +16,9 @@ exports.obtenerProductos = async (req, res) => {
   res.json(data);
 };
 
-// Controlador para actualizar el stock, que aumenta en 1 
+// Controlador para actualizar el stock, que aumenta o disminuye según la operación
 exports.actualizarStock = async (req, res) => {
-  const { idProducto } = req.body;
+  const { idProducto, operacion } = req.body; // operacion: 'sumar' o 'restar'
 
   // Obtenemos el producto para saber su stock actual
   const { data: producto, error: errorFetch } = await conexion
@@ -32,7 +32,12 @@ exports.actualizarStock = async (req, res) => {
     return res.status(404).json({ error: 'Producto no encontrado' });
   }
 
-  const nuevoStock = (producto.stock || 0) + 1;
+  let nuevoStock;
+  if (operacion === 'restar') {
+    nuevoStock = Math.max((producto.stock || 0) - 1, 0);
+  } else {
+    nuevoStock = (producto.stock || 0) + 1;
+  }
 
   // Actualizamos el stock en Supabase
   const { error: errorUpdate } = await conexion

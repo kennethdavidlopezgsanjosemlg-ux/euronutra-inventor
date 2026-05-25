@@ -40,14 +40,19 @@ async function manejarDeteccion(valor) {
     if (!isNaN(idProducto)) {
         console.log(`ID detectado: ${idProducto}`);
         escaneoBloqueado = true;
+        
+        // Obtener la operación seleccionada (sumar o restar)
+        const operacionElement = document.querySelector('input[name="operacion"]:checked');
+        const operacion = operacionElement ? operacionElement.value : 'sumar';
+
         notificacion.classList.add('alert-success');
-        textoDetectado.innerText = `Actualizando stock para el ID: ${idProducto}`;
+        textoDetectado.innerText = `${operacion === 'restar' ? 'Restando' : 'Sumando'} stock para el ID: ${idProducto}`;
 
         try {
             const respuesta = await fetch('/api/actualizar-stock', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ idProducto })
+                body: JSON.stringify({ idProducto, operacion })
             });
 
             if (respuesta.ok) {
