@@ -165,20 +165,23 @@
  .resultado-overlay {
      position: absolute;
      inset: 0;
-     background: rgba(0, 0, 0, 0.7);
-     backdrop-filter: blur(4px);
+     background: transparent;
      display: flex;
      justify-content: center;
      align-items: center;
-     z-index: 5;
+     z-index: 10;
      animation: fadeIn 0.3s ease-out;
+     pointer-events: none;
  }
  
  .resultado-content {
-     text-align: center;
-     color: white;
-     padding: 20px;
- }
+    text-align: center;
+    color: white;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+}
  
  .resultado-content i {
      font-size: 3rem;
