@@ -6,42 +6,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Código de barras web</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/escaneo.css">
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </head>
 
 <body class="bg-dark text-light">
 
-    <div class="container-fluid min-vh-100 d-flex flex-column position-relative">
-        <div class="position-absolute top-0 start-50 translate-middle-x mt-4 z-3">
-            <a href="/historial" class="button">Inventario</a>
+    <div class="container-fluid min-vh-100 d-flex flex-column p-0 overflow-hidden">
+        <!-- Header minimalista -->
+        <div class="d-flex justify-content-between align-items-center p-3 z-3">
+            <a href="/historial" class="btn-icon-circular" title="Inventario">
+                <i class="fas fa-list-ul"></i>
+            </a>
+            <div class="status-indicator">
+                <span id="status-text">Listo</span>
+            </div>
+            <label class="switch-minimal">
+                <input type="checkbox" id="toggle-camara" checked>
+                <span class="slider-minimal">
+                    <i class="fas fa-camera"></i>
+                </span>
+            </label>
         </div>
 
-        <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-            <div id="contenedor-lector" class="w-100 ratio ratio-4x3 overflow-hidden rounded" style="max-width: 500px;">
+        <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center px-3">
+            <!-- Contenedor del Lector con guía visual -->
+            <div id="contenedor-lector" class="w-100 ratio ratio-1x1 overflow-hidden rounded-4 shadow-lg border border-secondary border-opacity-25" style="max-width: 400px;">
                 <div id="lector"></div>
                 <div id="lector-placeholder" class="lector-placeholder">
-                    <img src="https://i.redd.it/vmv1po3j74z21.jpg" alt="Cámara no disponible" class="lector-placeholder-img">
+                    <div class="placeholder-content">
+                        <i class="fas fa-camera-slash mb-3 fs-1"></i>
+                        <p>Cámara desactivada</p>
+                    </div>
                 </div>
+                <div class="scanner-guide"></div>
             </div>
-            <label class="switch mt-4">
-                <input type="checkbox" id="toggle-camara" checked>
-                <span class="slider"></span>
-            </label>
-            <div class="mt-4 btn-group" role="group" aria-label="Operación de stock">
-                <input type="radio" class="btn-check" name="operacion" id="btn-sumar" value="sumar" checked autocomplete="off">
-                <label class="btn btn-outline-success px-5 py-3 fs-4" for="btn-sumar">Sumar</label>
-              
-                <input type="radio" class="btn-check" name="operacion" id="btn-restar" value="restar" autocomplete="off">
-                <label class="btn btn-outline-danger px-5 py-3 fs-4" for="btn-restar">Restar</label>
+
+            <!-- Selector de operación moderno -->
+            <div class="mt-5 operation-selector">
+                <input type="radio" name="operacion" id="btn-sumar" value="sumar" checked>
+                <label for="btn-sumar" class="op-btn op-sumar">
+                    <i class="fas fa-plus-circle me-2"></i> Sumar
+                </label>
+
+                <input type="radio" name="operacion" id="btn-restar" value="restar">
+                <label for="btn-restar" class="op-btn op-restar">
+                    <i class="fas fa-minus-circle me-2"></i> Restar
+                </label>
             </div>
         </div>
 
-        <div id="notificacion" class="alert alert-success fixed-bottom mb-4 mx-auto d-none shadow-lg text-center"
-            role="alert">
-            <strong><span id="textoDetectado"></span></strong>
+        <!-- Notificación flotante mejorada -->
+        <div id="notificacion" class="notificacion-toast d-none">
+            <div class="toast-content">
+                <i id="notif-icon" class="fas fa-check-circle me-2"></i>
+                <span id="textoDetectado"></span>
+            </div>
         </div>
     </div>
 

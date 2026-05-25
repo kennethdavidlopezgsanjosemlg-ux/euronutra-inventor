@@ -1,52 +1,80 @@
 const notificacion = document.getElementById('notificacion');
 const textoDetectado = document.getElementById('textoDetectado');
 const toggleCamara = document.getElementById('toggle-camara');
+const statusText = document.getElementById('status-text');
+const notifIcon = document.getElementById('notif-icon');
 
 let escaneoBloqueado = false;
 let lector;
 
+function actualizarStatus(texto) {
+    if (statusText) statusText.innerText = texto;
+}
+
+function mostrarNotificacion(mensaje, tipo = 'success') {
+    textoDetectado.innerText = mensaje;
+    notificacion.classList.remove('d-none', 'notif-success', 'notif-error', 'notif-info');
+    
+    let iconClass = 'fa-check-circle';
+    if (tipo === 'error') {
+        notificacion.classList.add('notif-error');
+        iconClass = 'fa-exclamation-circle';
+    } else if (tipo === 'info') {
+        notificacion.classList.add('notif-info');
+        iconClass = 'fa-info-circle';
+    } else {
+        notificacion.classList.add('notif-success');
+    }
+    
+    if (notifIcon) notifIcon.className = `fas ${iconClass} me-2`;
+
+    setTimeout(() => {
+        notificacion.classList.add('d-none');
+        escaneoBloqueado = false;
+    }, 3000);
+}
+
 function iniciarEscaner() {
     lector = new Html5Qrcode('lector'); 
+    actualizarStatus('Iniciando...');
 
-    // Configuración para mejorar la detección de escáner ya que por defecto es muy malo
     const configuracion = { fps: 15 };
     const alDetectar = (texto) => {
         if (escaneoBloqueado) return;
         manejarDeteccion(texto);
     };
 
-    // Inicio de cámara ya se trasera como frontal 
     lector.start(
         { facingMode: 'environment' },
         configuracion,
         alDetectar,
         () => { }
-    ).catch(() => {
+    ).then(() => {
+        actualizarStatus('Listo');
+    }).catch(() => {
         lector.start(
             { facingMode: 'user' },
             configuracion,
             alDetectar,
             () => { }
-        ).catch((error) => console.error(error));
+        ).then(() => {
+            actualizarStatus('Listo');
+        }).catch((error) => {
+            console.error(error);
+            actualizarStatus('Error');
+        });
     });
-    console.log('Cámara y escáner iniciado con éxito');
 }
 
 async function manejarDeteccion(valor) {
     const idProducto = parseInt(valor.trim(), 10); 
-    notificacion.classList.remove('alert-success', 'alert-info', 'alert-warning', 'alert-danger');
-
-    // Si el valor detectado es un número, se asume que es un ID de producto
+    
     if (!isNaN(idProducto)) {
-        console.log(`ID detectado: ${idProducto}`);
         escaneoBloqueado = true;
+        actualizarStatus('Procesando...');
         
-        // Obtener la operación seleccionada (sumar o restar)
         const operacionElement = document.querySelector('input[name="operacion"]:checked');
         const operacion = operacionElement ? operacionElement.value : 'sumar';
-
-        notificacion.classList.add('alert-success');
-        textoDetectado.innerText = `${operacion === 'restar' ? 'Restando' : 'Sumando'} stock para el ID: ${idProducto}`;
 
         try {
             const respuesta = await fetch('/api/actualizar-stock', {
@@ -57,55 +85,46 @@ async function manejarDeteccion(valor) {
 
             if (respuesta.ok) {
                 const datos = await respuesta.json();
-                console.log(`Stock actualizado: ${JSON.stringify(datos)}`);
-                textoDetectado.innerText = `ID ${datos.idProducto} actualizado. Stock actual: ${datos.nuevoStock}`;
+                mostrarNotificacion(`ID ${datos.idProducto} actualizado. Stock: ${datos.nuevoStock}`, 'success');
+                actualizarStatus('Éxito');
             } else {
-                textoDetectado.innerText = `El ID ${idProducto} no existe en la base de datos`;
-                notificacion.classList.replace('alert-success', 'alert-danger');
+                mostrarNotificacion(`ID ${idProducto} no encontrado`, 'error');
+                actualizarStatus('No encontrado');
             }
         } catch {
-            textoDetectado.innerText = 'Error de conexión con el servidor';
-            notificacion.classList.replace('alert-success', 'alert-danger');
+            mostrarNotificacion('Error de conexión', 'error');
+            actualizarStatus('Error Red');
         }
     } else {
-        notificacion.classList.add('alert-info');
-        textoDetectado.innerText = `Detectado: ${valor}`;
+        mostrarNotificacion(`Detectado: ${valor}`, 'info');
     }
 
-    notificacion.classList.remove('d-none');
-
-    // Después de 3 segundos, ocultar la notificación y desbloquea el escaneo otra vez 
     setTimeout(() => {
-        notificacion.classList.add('d-none');
-        escaneoBloqueado = false;
+        if (!escaneoBloqueado) actualizarStatus('Listo');
     }, 3000);
 }
 
-// Escuchar cambios en el switch para apagar o encender la cámara
 const lectorPlaceholder = document.getElementById('lector-placeholder');
 
 toggleCamara.addEventListener('change', async function () {
-    if (this.checked) {
-        // Si el switch está activo, desactivamos la cámara y mostramos el placeholder
+    if (!this.checked) {
         if (lector) {
+            actualizarStatus('Apagado');
             await lector.stop().catch(err => console.error("Error al detener:", err));
-            console.log('Cámara desactivada');
         }
         lectorPlaceholder.style.display = 'flex';
     } else {
-        // Si el switch se desactiva, volvemos a iniciar la cámara y ocultamos el placeholder
         lectorPlaceholder.style.display = 'none';
         iniciarEscaner();
     }
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Mostrar u ocultar placeholder según el estado del switch
-    if (!toggleCamara.checked) {
+    if (toggleCamara.checked) {
         lectorPlaceholder.style.display = 'none';
         iniciarEscaner();
     } else {
         lectorPlaceholder.style.display = 'flex';
-        console.log('Cámara desactivada');
+        actualizarStatus('Apagado');
     }
 });
