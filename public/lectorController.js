@@ -1,8 +1,8 @@
-const notificacion = document.getElementById('notificacion');
-const textoDetectado = document.getElementById('textoDetectado');
+const resultadoEscaneo = document.getElementById('resultado-escaneo');
+const resText = document.getElementById('res-text');
+const resIcon = document.getElementById('res-icon');
 const toggleCamara = document.getElementById('toggle-camara');
 const statusText = document.getElementById('status-text');
-const notifIcon = document.getElementById('notif-icon');
 
 let escaneoBloqueado = false;
 let lector;
@@ -12,24 +12,24 @@ function actualizarStatus(texto) {
 }
 
 function mostrarNotificacion(mensaje, tipo = 'success') {
-    textoDetectado.innerText = mensaje;
-    notificacion.classList.remove('d-none', 'notif-success', 'notif-error', 'notif-info');
+    resText.innerText = mensaje;
+    resultadoEscaneo.classList.remove('d-none', 'res-success', 'res-error', 'res-info');
     
     let iconClass = 'fa-check-circle';
     if (tipo === 'error') {
-        notificacion.classList.add('notif-error');
+        resultadoEscaneo.classList.add('res-error');
         iconClass = 'fa-exclamation-circle';
     } else if (tipo === 'info') {
-        notificacion.classList.add('notif-info');
+        resultadoEscaneo.classList.add('res-info');
         iconClass = 'fa-info-circle';
     } else {
-        notificacion.classList.add('notif-success');
+        resultadoEscaneo.classList.add('res-success');
     }
     
-    if (notifIcon) notifIcon.className = `fas ${iconClass} me-2`;
+    if (resIcon) resIcon.className = `fas ${iconClass} mb-2`;
 
     setTimeout(() => {
-        notificacion.classList.add('d-none');
+        resultadoEscaneo.classList.add('d-none');
         escaneoBloqueado = false;
     }, 3000);
 }

@@ -103,28 +103,21 @@
 
  .scanner-guide {
      position: absolute;
-     inset: 15%;
-     border: 2px solid rgba(255, 255, 255, 0.1);
-     border-radius: 20px;
-     pointer-events: none;
-     z-index: 1;
- }
-
- .scanner-guide::before {
-     content: '';
-     position: absolute;
-     top: 0; left: 0; right: 0;
+     top: 50%;
+     left: 10%;
+     right: 10%;
      height: 2px;
      background: #3b82f6;
-     box-shadow: 0 0 10px #3b82f6;
-     animation: scan 2s linear infinite;
+     box-shadow: 0 0 15px #3b82f6, 0 0 5px #fff;
+     pointer-events: none;
+     z-index: 1;
+     transform: translateY(-50%);
+     animation: scan-horizontal 2s ease-in-out infinite;
  }
-
- @keyframes scan {
-     0% { top: 0; opacity: 0; }
-     10% { opacity: 1; }
-     90% { opacity: 1; }
-     100% { top: 100%; opacity: 0; }
+ 
+ @keyframes scan-horizontal {
+     0%, 100% { transform: translateY(-150px); opacity: 0.2; }
+     50% { transform: translateY(150px); opacity: 1; }
  }
 
  /* Operation Selector */
@@ -167,33 +160,41 @@
      border-color: rgba(239, 68, 68, 0.2);
  }
 
- /* Notifications */
- .notificacion-toast {
-     position: fixed;
-     bottom: 30px;
-     left: 50%;
-     transform: translateX(-50%);
-     z-index: 10;
-     animation: slideUp 0.3s ease-out;
- }
-
- .toast-content {
-     background: #1e293b;
-     color: white;
-     padding: 12px 24px;
-     border-radius: 12px;
-     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-     border: 1px solid rgba(255, 255, 255, 0.1);
+ /* Notifications & Results */
+ .resultado-overlay {
+     position: absolute;
+     inset: 0;
+     background: rgba(0, 0, 0, 0.7);
+     backdrop-filter: blur(4px);
      display: flex;
+     justify-content: center;
      align-items: center;
-     white-space: nowrap;
+     z-index: 5;
+     animation: fadeIn 0.3s ease-out;
  }
-
- @keyframes slideUp {
-     from { transform: translate(-50%, 20px); opacity: 0; }
-     to { transform: translate(-50%, 0); opacity: 1; }
+ 
+ .resultado-content {
+     text-align: center;
+     color: white;
+     padding: 20px;
  }
-
- .notif-success { border-color: #22c55e; }
- .notif-error { border-color: #ef4444; }
- .notif-info { border-color: #3b82f6; }
+ 
+ .resultado-content i {
+     font-size: 3rem;
+     display: block;
+ }
+ 
+ #res-text {
+     font-size: 1.25rem;
+     font-weight: 600;
+     margin-top: 10px;
+ }
+ 
+ @keyframes fadeIn {
+     from { opacity: 0; }
+     to { opacity: 1; }
+ }
+ 
+ .res-success i { color: #4ade80; }
+ .res-error i { color: #f87171; }
+ .res-info i { color: #3b82f6; }
