@@ -50,7 +50,8 @@ router.get('/historial', async (req, res) => {
             articulos: data,
             paginaActual: pagina,
             totalPaginas: totalPaginas,
-            busqueda: busqueda
+            busqueda: busqueda,
+            layout: req.query.ajax ? false : undefined // Esto es para algunos motores, pero en EJS lo manejaremos en la vista o enviando solo el render
         });
     } catch (error) {
         console.error('Error inesperado al cargar historial:', error);

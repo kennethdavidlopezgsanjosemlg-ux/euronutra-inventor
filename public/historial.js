@@ -26,24 +26,74 @@ const buscador = document.getElementById('buscador');
 let timeoutBusqueda;
 
 buscador.addEventListener('input', function () {
-    const textoBusqueda = buscador.value.toLowerCase();
-    const filas = document.querySelectorAll('#contenedor-productos tbody tr');
+    const textoBusqueda = buscador.value.trim();
     const paginacion = document.querySelector('nav[aria-label="Navegación de historial"]');
 
-    if (textoBusqueda.length > 0) {
-        if (paginacion) paginacion.style.display = 'none';
-    } else {
-        if (paginacion) paginacion.style.display = '';
-    }
+    clearTimeout(timeoutBusqueda);
+    timeoutBusqueda = setTimeout(async () => {
+        try {
+            // Realizar petición asíncrona al servidor
+            const response = await fetch(`/historial?buscar=${encodeURIComponent(textoBusqueda)}&ajax=1`);
+            const html = await response.text();
+            
+            // Crear un elemento temporal para parsear el HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // Actualizar la tabla
+            const nuevaTabla = tempDiv.querySelector('#contenedor-productos tbody');
+            if (nuevaTabla) {
+                tbody.innerHTML = nuevaTabla.innerHTML;
+            }
 
-    filas.forEach(fila => {
-        const nombre = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
-        if (nombre.includes(textoBusqueda)) {
-            fila.style.display = '';
-        } else {
-            fila.style.display = 'none';
+            // Actualizar la paginación
+            const nuevaPaginacion = tempDiv.querySelector('nav[aria-label="Navegación de historial"]');
+            const contenedorPadrePaginacion = document.querySelector('.container.py-4');
+            const paginacionActual = document.querySelector('nav[aria-label="Navegación de historial"]');
+            
+            if (nuevaPaginacion) {
+                if (paginacionActual) {
+                    paginacionActual.outerHTML = nuevaPaginacion.outerHTML;
+                } else {
+                    // Si no había paginación, la añadimos antes del mensaje de "No hay artículos" o al final
+                    const noHayMensaje = document.querySelector('.text-center.text-secondary.mt-5.h4');
+                    if (noHayMensaje) {
+                        noHayMensaje.before(nuevaPaginacion);
+                    } else {
+                        contenedorPadrePaginacion.appendChild(nuevaPaginacion);
+                    }
+                }
+            } else if (paginacionActual) {
+                paginacionActual.remove();
+            }
+
+            // Actualizar mensaje de "No hay artículos"
+            const nuevoNoHayMensaje = tempDiv.querySelector('.text-center.text-secondary.mt-5.h4');
+            const noHayMensajeActual = document.querySelector('.text-center.text-secondary.mt-5.h4');
+            
+            if (nuevoNoHayMensaje) {
+                if (!noHayMensajeActual) {
+                    contenedorPadrePaginacion.appendChild(nuevoNoHayMensaje);
+                } else {
+                    noHayMensajeActual.outerHTML = nuevoNoHayMensaje.outerHTML;
+                }
+            } else if (noHayMensajeActual) {
+                noHayMensajeActual.remove();
+            }
+
+            // Re-vincular eventos si es necesario
+            const nuevosBotonesDisminuir = tbody.querySelectorAll('.boton-disminuir');
+            nuevosBotonesDisminuir.forEach(boton => {
+                boton.addEventListener('click', (e) => {
+                    // Si queremos que los botones de la tabla sigan funcionando normalmente (redirección)
+                    // no hace falta hacer nada especial aquí a menos que queramos que la resta sea AJAX también.
+                });
+            });
+
+        } catch (error) {
+            console.error('Error al buscar productos:', error);
         }
-    });
+    }, 400); // 400ms de debounce para no saturar el servidor
 });
 
 // Posicionar el cursor al final del texto en el buscador al cargar si hay búsqueda
