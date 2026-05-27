@@ -1,16 +1,22 @@
 body {
-  background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #1e293b);
-  background-size: 300% 300%;
-  
-  animation: gradientBody 30s ease infinite;
-  
-  min-height: 100vh;
-  margin: 0;
-  background-color: #0f172a; 
+    background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #1e293b);
+    background-size: 300% 300%;
+
+    animation: gradientBody 30s ease infinite;
+
+    min-height: 100vh;
+    margin: 0;
+    background-color: #0f172a;
 }
 
 @keyframes gradientBody {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }

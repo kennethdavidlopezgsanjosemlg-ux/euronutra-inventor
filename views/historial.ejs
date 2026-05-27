@@ -23,9 +23,10 @@
             <a href="/escaneo" class="btn-icon-circular" title="Cámara">
                 <i class="fas fa-camera"></i>
             </a>
-        <div class="contenedor-buscador">
-            <input type="text" id="buscador" placeholder="Busca por nombre de producto" > </input>
+        </div>
 
+        <div class="contenedor-buscador">
+            <input type="text" id="buscador" placeholder="Busca por nombre de producto" value="<%= busqueda %>">
         </div>
 
         <div class="mb-4 d-flex justify-content-between align-items-center">
@@ -72,7 +73,7 @@
                                 </span>
                             </td>
                             <td class="px-4 text-center">
-                                <a href="/disminuir/<%= articulo.id_producto %>"
+                                <a href="/disminuir/<%= articulo.id_producto %>?pagina=<%= paginaActual %>&buscar=<%= busqueda %>"
                                     class="btn btn-sm btn-danger boton-disminuir" data-id="<%= articulo.id_producto %>">
                                     -1
                                 </a>
@@ -82,6 +83,29 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Paginación -->
+        <% if (totalPaginas > 1) { %>
+            <nav aria-label="Navegación de historial" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <%= paginaActual === 1 ? 'disabled' : '' %>">
+                        <a class="page-link bg-dark text-light border-secondary" href="/historial?pagina=<%= paginaActual - 1 %>&buscar=<%= busqueda %>">Anterior</a>
+                    </li>
+                    
+                    <% for(let i = 1; i <= totalPaginas; i++) { %>
+                        <li class="page-item <%= paginaActual === i ? 'active' : '' %>">
+                            <a class="page-link <%= paginaActual === i ? 'bg-primary border-primary' : 'bg-dark text-light border-secondary' %>" href="/historial?pagina=<%= i %>&buscar=<%= busqueda %>">
+                                <%= i %>
+                            </a>
+                        </li>
+                    <% } %>
+
+                    <li class="page-item <%= paginaActual === totalPaginas ? 'disabled' : '' %>">
+                        <a class="page-link bg-dark text-light border-secondary" href="/historial?pagina=<%= paginaActual + 1 %>&buscar=<%= busqueda %>">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+        <% } %>
 
         <!-- Por si no hay artículos-->
         <% if (articulos.length===0) { %>

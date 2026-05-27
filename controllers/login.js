@@ -1,11 +1,11 @@
 const conexion = require('../database/db');
-const bcrypt = require('bcryptjs'); 
+const bcrypt = require('bcryptjs');
 
 exports.iniciarSesion = async (req, res) => {
-    const { email, password } = req.body;
+    const {email, password} = req.body;
 
     try {
-        const { data: usuario, error } = await conexion
+        const {data: usuario, error} = await conexion
             .from('usuarios')
             .select('*')
             .eq('email', email)
@@ -24,14 +24,14 @@ exports.iniciarSesion = async (req, res) => {
         }
 
         const coinciden = await bcrypt.compare(password, usuario.password);
-        console.log('¿Contraseña coincide?:', coinciden);
+        console.log('Coincide la contraseña:', coinciden);
         if (coinciden) {
             return res.redirect('/seleccion');
         }
 
         return res.redirect('/?error=auth');
     } catch (error) {
-        console.error('Error inesperado en iniciarSesion:', error);
+        console.error('Error al iniciar sesión:', error);
         return res.redirect('/?error=server');
     }
 };

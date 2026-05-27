@@ -3,18 +3,18 @@ const resText = document.getElementById('res-text');
 const resIcon = document.getElementById('res-icon');
 const toggleCamara = document.getElementById('toggle-camara');
 const statusText = document.getElementById('status-text');
-const scannerGuide = document.querySelector('.scanner-guide');
+const lectorOperacion = document.querySelector('.scanner-guide');
 const operacionRadios = document.querySelectorAll('input[name="operacion"]');
 
 function actualizarGuia() {
-    if (!scannerGuide) return;
+    if (!lectorOperacion) return;
     const operacion = document.querySelector('input[name="operacion"]:checked').value;
     if (operacion === 'sumar') {
-        scannerGuide.classList.add('scan-sumar');
-        scannerGuide.classList.remove('scan-restar');
+        lectorOperacion.classList.add('scan-sumar');
+        lectorOperacion.classList.remove('scan-restar');
     } else {
-        scannerGuide.classList.add('scan-restar');
-        scannerGuide.classList.remove('scan-sumar');
+        lectorOperacion.classList.add('scan-restar');
+        lectorOperacion.classList.remove('scan-sumar');
     }
 }
 
@@ -30,7 +30,7 @@ function actualizarStatus(texto) {
 function mostrarNotificacion(mensaje, tipo = 'success') {
     resText.innerText = mensaje;
     resultadoEscaneo.classList.remove('d-none', 'res-success', 'res-error', 'res-info');
-    
+
     let iconClass = 'fa-check-circle';
     if (tipo === 'error') {
         resultadoEscaneo.classList.add('res-error');
@@ -41,7 +41,7 @@ function mostrarNotificacion(mensaje, tipo = 'success') {
     } else {
         resultadoEscaneo.classList.add('res-success');
     }
-    
+
     if (resIcon) resIcon.className = `fas ${iconClass} mb-2`;
 
     // Ocultar el mensaje después de 2 segundos
@@ -57,10 +57,11 @@ function mostrarNotificacion(mensaje, tipo = 'success') {
 }
 
 function iniciarEscaner() {
-    lector = new Html5Qrcode('lector'); 
+    lector = new Html5Qrcode('lector');
     actualizarStatus('Iniciando...');
 
-    const configuracion = { 
+    // Configuración de cámara
+    const configuracion = {
         fps: 15,
         qrbox: { width: 250, height: 250 },
         aspectRatio: 1.0,
@@ -71,6 +72,7 @@ function iniciarEscaner() {
         manejarDeteccion(texto);
     };
 
+    // Intentamos iniciar con la cámara trasera, si falla intentamos con la frontal
     lector.start(
         { facingMode: 'environment' },
         configuracion,
@@ -94,12 +96,12 @@ function iniciarEscaner() {
 }
 
 async function manejarDeteccion(valor) {
-    const idProducto = parseInt(valor.trim(), 10); 
-    
+    const idProducto = parseInt(valor.trim(), 10);
+
     if (!isNaN(idProducto)) {
         escaneoBloqueado = true;
         actualizarStatus('Procesando...');
-        
+
         const operacionElement = document.querySelector('input[name="operacion"]:checked');
         const operacion = operacionElement ? operacionElement.value : 'sumar';
 
@@ -120,7 +122,7 @@ async function manejarDeteccion(valor) {
             }
         } catch {
             mostrarNotificacion('Error de conexión', 'error');
-            actualizarStatus('Error Red');
+            actualizarStatus('Error');
         }
     } else {
         mostrarNotificacion(`Detectado: ${valor}`, 'info');

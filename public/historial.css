@@ -121,16 +121,23 @@ body {
     background-color: rgba(255, 255, 255, 0.08);
 }
 
-.orden-item+.orden-item {
+.orden-item + .orden-item {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .contenedor-buscador {
     position: relative;
     width: 100%;
-    max-width: 400px;
+    max-width: 600px;
     margin: 0 auto;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .contenedor-buscador input[type="text"] {
@@ -152,4 +159,13 @@ body {
 .contenedor-buscador input[type="text"]:focus {
     border-color: #6366f1;
     background-color: rgba(99, 102, 241, 0.1);
+}
+
+.table-responsive {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.table {
+    width: 100% !important;
 }

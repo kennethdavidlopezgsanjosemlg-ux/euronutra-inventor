@@ -23,17 +23,23 @@ ordenarItems.forEach(item => {
 });
 
 const buscador = document.getElementById('buscador');
+let timeoutBusqueda;
 
-buscador.addEventListener('input', async function () {
-    const textoBusqueda = buscador.value.toLowerCase();
-    const filas = document.querySelectorAll('#contenedor-productos tbody tr');
+buscador.addEventListener('input', function () {
+    clearTimeout(timeoutBusqueda);
+    timeoutBusqueda = setTimeout(() => {
+        const textoBusqueda = buscador.value.trim();
+        // Redirigir a la primera página con el término de búsqueda
+        window.location.href = `/historial?pagina=1&buscar=${encodeURIComponent(textoBusqueda)}`;
+    }, 500); // 500ms de debounce
+});
 
-    filas.forEach(fila => {
-        const nombre = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
-        if (nombre.includes(textoBusqueda)) {
-            fila.style.display = '';
-        } else {
-            fila.style.display = 'none';
-        }
-    });
+// Posicionar el cursor al final del texto en el buscador al cargar si hay búsqueda
+window.addEventListener('DOMContentLoaded', () => {
+    if (buscador.value.length > 0) {
+        buscador.focus();
+        const val = buscador.value;
+        buscador.value = '';
+        buscador.value = val;
+    }
 });
