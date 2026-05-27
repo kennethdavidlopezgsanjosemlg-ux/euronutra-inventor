@@ -85,8 +85,6 @@ buscador.addEventListener('input', function () {
             const nuevosBotonesDisminuir = tbody.querySelectorAll('.boton-disminuir');
             nuevosBotonesDisminuir.forEach(boton => {
                 boton.addEventListener('click', (e) => {
-                    // Si queremos que los botones de la tabla sigan funcionando normalmente (redirección)
-                    // no hace falta hacer nada especial aquí a menos que queramos que la resta sea AJAX también.
                 });
             });
 
