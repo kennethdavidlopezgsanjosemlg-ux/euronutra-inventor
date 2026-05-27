@@ -26,12 +26,24 @@ const buscador = document.getElementById('buscador');
 let timeoutBusqueda;
 
 buscador.addEventListener('input', function () {
-    clearTimeout(timeoutBusqueda);
-    timeoutBusqueda = setTimeout(() => {
-        const textoBusqueda = buscador.value.trim();
-        // Redirigir a la primera página con el término de búsqueda
-        window.location.href = `/historial?pagina=1&buscar=${encodeURIComponent(textoBusqueda)}`;
-    }, 500); // 500ms de debounce
+    const textoBusqueda = buscador.value.toLowerCase();
+    const filas = document.querySelectorAll('#contenedor-productos tbody tr');
+    const paginacion = document.querySelector('nav[aria-label="Navegación de historial"]');
+
+    if (textoBusqueda.length > 0) {
+        if (paginacion) paginacion.style.display = 'none';
+    } else {
+        if (paginacion) paginacion.style.display = '';
+    }
+
+    filas.forEach(fila => {
+        const nombre = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        if (nombre.includes(textoBusqueda)) {
+            fila.style.display = '';
+        } else {
+            fila.style.display = 'none';
+        }
+    });
 });
 
 // Posicionar el cursor al final del texto en el buscador al cargar si hay búsqueda
