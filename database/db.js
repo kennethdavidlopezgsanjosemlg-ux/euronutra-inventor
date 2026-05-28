@@ -8,6 +8,7 @@ if (!supabaseUrl || !supabaseKey) {
     console.error(
         'Faltan variables de entorno: SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY '
     );
+    process.exit(1);
 }
 
 const conexion = createClient(supabaseUrl, supabaseKey);
