@@ -1,0 +1,19 @@
+{
+  "name": "Euronutra Stock",
+  "short_name": "Euronutra",
+  "description": "Gestion de inventario y escaneo de codigos.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0d6efd",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/icono-pwa.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
