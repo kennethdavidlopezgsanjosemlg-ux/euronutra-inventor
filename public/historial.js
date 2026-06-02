@@ -81,7 +81,6 @@ buscador.addEventListener('input', function () {
                 noHayMensajeActual.remove();
             }
 
-            // Re-vincular eventos si es necesario
             const nuevosBotonesDisminuir = tbody.querySelectorAll('.boton-disminuir');
             nuevosBotonesDisminuir.forEach(boton => {
                 boton.addEventListener('click', (e) => {
