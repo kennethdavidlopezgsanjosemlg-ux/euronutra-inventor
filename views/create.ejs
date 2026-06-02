@@ -49,17 +49,9 @@
                     <label for="precio" class="form-label">Precio</label>
                     <input type="number" class="form-control" id="precio" name="precio" step="0.01" required>
                     <select name="categoria" id="categoria">
-                        <option value="Verdura">Verdura</option>
-                        <option value="Fruta">Fruta</option>
-                        <option value="Electronica">Electronica</option>
-                        <option value="Periféricos">Periféricos</option>
-                        <option value="Muebles">Muebles</option>
-                        <option value="Hogar">Hogar</option>
-                        <option value="Telefonía">Telefonía</option>
-                        <option value="Accesorios">Accesorios</option>
-                        <option value="Diseño">Diseño</option>
-                        <option value="Componentes">Componentes</option>
-
+                        <% categorias.forEach(categoria => { %>
+                            <option value="<%= categoria.categoria %>"><%= categoria.categoria %></option>
+                        <% }) %>
                     </select>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <a href="/crudProductos" class="btn btn-secondary">Cancelar</a>

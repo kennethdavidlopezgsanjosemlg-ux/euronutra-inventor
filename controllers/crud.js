@@ -100,3 +100,50 @@ exports.obtenerPorId = async (req, res) => {
 
     res.json(data);
 };
+
+exports.registrarPorEscaneo = async (req, res) => {
+    const {idProducto, nombre, precio, categoria} = req.body;
+    const id = parseInt(idProducto, 10);
+    const precioNumerico = parseFloat(precio);
+
+    if (isNaN(id) || !nombre || isNaN(precioNumerico) || !categoria) {
+        return res.status(400).json({error: 'Datos inválidos para registrar el producto'});
+    }
+
+    const {data: existente, error: errorExistente} = await conexion
+        .from('articulo')
+        .select('id_producto')
+        .eq('id_producto', id)
+        .single();
+
+    if (existente) {
+        return res.status(409).json({error: 'El producto ya existe'});
+    }
+
+    if (errorExistente && errorExistente.code !== 'PGRST116') {
+        console.error('Error al validar existencia del producto:', errorExistente);
+        return res.status(500).json({error: 'Error al validar el producto'});
+    }
+
+    const {data, error} = await conexion
+        .from('articulo')
+        .insert({
+            id_producto: id,
+            nombre: nombre.trim(),
+            precio: precioNumerico,
+            categoria: categoria.trim(),
+            stock: 0
+        })
+        .select('id_producto, nombre')
+        .single();
+
+    if (error) {
+        console.error('Error al registrar producto por escaneo:', error);
+        return res.status(500).json({error: 'No se pudo registrar el producto'});
+    }
+
+    return res.status(201).json({
+        mensaje: 'Producto registrado correctamente',
+        producto: data
+    });
+};

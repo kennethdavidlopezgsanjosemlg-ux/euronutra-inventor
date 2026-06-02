@@ -3,7 +3,6 @@ const router = express.Router();
 const stockController = require('./controllers/stock');
 const loginController = require('./controllers/login');
 const conexion = require('./database/db'); // Importante para la ruta /historial
-const qrcode = require('qrcode');
 
 // Rutas para las operaciones de productos
 router.get('/api/productos', stockController.obtenerProductos);
@@ -117,6 +116,7 @@ router.post('/update', crud.update);
 router.get('/edit/:id_producto', crud.mostrarEditar);
 router.get('/delete/:id_producto', crud.eliminar);
 router.get('/api/producto/:id', crud.obtenerPorId);
+router.post('/api/producto/registrar', crud.registrarPorEscaneo);
 
 
 module.exports = router;
