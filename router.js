@@ -106,48 +106,17 @@ router.get('/disminuir/:id', async (req, res) => {
     }
 });
 
-// Rutas de create, edit, delete, api
+// Rutas CRUD de productos
 const crud = require('./controllers/crud');
+
+router.get('/crudProductos', crud.listar);
+router.get('/productos', crud.listar);
+router.get('/create', (req, res) => res.render('create'));
 router.post('/save', crud.save);
 router.post('/update', crud.update);
-
-router.get('/create', (req, res) => { res.render('create'); });
-
-router.get('/edit/:id_producto', async (req, res) => {
-    try {
-        const id = req.params.id_producto;
-        const response = await supabaseClient.get(`/articulo?id_producto=eq.${id}`);
-        if (response.data.length === 0) return res.status(404).send('Artículo no encontrado');
-        res.render('edit', { articulo: response.data[0] });
-    } catch (err) {
-        console.error('Error:', err.message);
-        return res.status(500).send('Error');
-    }
-});
-
-router.get('/delete/:id_producto', async (req, res) => {
-    try {
-        const id = req.params.id_producto;
-        await supabaseClient.delete(`/articulo?id_producto=eq.${id}`);
-        res.redirect('/');
-    } catch (err) {
-        console.error('Error:', err.message);
-        return res.status(500).send('Error');
-    }
-});
-
-// API para obtener los datos de un producto por su ID (usado por la App Móvil)
-router.get('/api/producto/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const response = await supabaseClient.get(`/articulo?id_producto=eq.${id}`);
-        if (response.data.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });
-        res.json(response.data[0]);
-    } catch (err) {
-        console.error('Error:', err.message);
-        return res.status(500).json({ error: 'Error en la base de datos' });
-    }
-});
+router.get('/edit/:id_producto', crud.mostrarEditar);
+router.get('/delete/:id_producto', crud.eliminar);
+router.get('/api/producto/:id', crud.obtenerPorId);
 
 
 module.exports = router;
