@@ -3,6 +3,7 @@ const router = express.Router();
 const stockController = require('./controllers/stock');
 const loginController = require('./controllers/login');
 const conexion = require('./database/db'); // Importante para la ruta /historial
+const qrcode = require('qrcode');
 
 // Rutas para las operaciones de productos
 router.get('/api/productos', stockController.obtenerProductos);
@@ -102,6 +103,49 @@ router.get('/disminuir/:id', async (req, res) => {
     } catch (error) {
         console.error('Error inesperado al disminuir stock:', error);
         res.status(500).send('Error al disminuir stock');
+    }
+});
+
+// Rutas de create, edit, delete, api
+const crud = require('./controllers/crud');
+router.post('/save', crud.save);
+router.post('/update', crud.update);
+
+router.get('/create', (req, res) => { res.render('create'); });
+
+router.get('/edit/:id_producto', async (req, res) => {
+    try {
+        const id = req.params.id_producto;
+        const response = await supabaseClient.get(`/articulo?id_producto=eq.${id}`);
+        if (response.data.length === 0) return res.status(404).send('Artículo no encontrado');
+        res.render('edit', { articulo: response.data[0] });
+    } catch (err) {
+        console.error('Error:', err.message);
+        return res.status(500).send('Error');
+    }
+});
+
+router.get('/delete/:id_producto', async (req, res) => {
+    try {
+        const id = req.params.id_producto;
+        await supabaseClient.delete(`/articulo?id_producto=eq.${id}`);
+        res.redirect('/');
+    } catch (err) {
+        console.error('Error:', err.message);
+        return res.status(500).send('Error');
+    }
+});
+
+// API para obtener los datos de un producto por su ID (usado por la App Móvil)
+router.get('/api/producto/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const response = await supabaseClient.get(`/articulo?id_producto=eq.${id}`);
+        if (response.data.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });
+        res.json(response.data[0]);
+    } catch (err) {
+        console.error('Error:', err.message);
+        return res.status(500).json({ error: 'Error en la base de datos' });
     }
 });
 

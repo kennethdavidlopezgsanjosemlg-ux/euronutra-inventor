@@ -64,3 +64,44 @@ exports.actualizarStock = async (req, res) => {
 
     res.json({idProducto, nuevoStock});
 };
+
+// Función para guardar un nuevo articulo en la base de datos
+exports.save = async (req, res) => {
+    try {
+        const nombre = req.body.nombre;
+        const precio = req.body.precio;
+        const categoria = req.body.categoria;
+        
+        await supabaseClient.post('/articulo', {
+            nombre: nombre,
+            precio: precio,
+            categoria: categoria
+        });
+        
+        res.redirect('/');
+    } catch (err) {
+        console.error('Error al guardar el articulo:', err.message);
+        res.status(500).send('Error al guardar el articulo');
+    }
+};
+
+// Función para actualizar un articulo existente en la base de datos
+exports.update = async (req, res) => {
+    try {
+        const id = req.body.id_producto;
+        const nombre = req.body.nombre;
+        const precio = req.body.precio;
+        const categoria = req.body.categoria;
+        
+        await supabaseClient.patch(`/articulo?id_producto=eq.${id}`, {
+            nombre: nombre,
+            precio: precio,
+            categoria: categoria
+        });
+        
+        res.redirect('/');
+    } catch (err) {
+        console.error('Error al actualizar el articulo:', err.message);
+        res.status(500).send('Error al actualizar el articulo');
+    }
+};

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inventario - Crud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- LIBRERÍA JSBARCODE PARA EL NAVEGADOR -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    </nav>
+
+    <div class="container">
+        <a href="/create" class="btn btn-outline-primary mt-4"><i class="bx bx-plus bx-md"></i></a>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-center mt-4 align-middle">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th scope="col">ID</th>
+                        <th scope="col">NOMBRE</th>
+                        <th scope="col">PRECIO</th>
+                        <th scope="col">CATEGORÍA</th>
+                        <th scope="col">CÓDIGO DE BARRAS</th>
+                        <th scope="col">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% results.forEach(articulo=> { %>
+                        <tr>
+                            <td>
+                                <%= articulo.id_producto %>
+                            </td>
+                            <td>
+                                <%= articulo.nombre %>
+                            </td>
+                            <td>
+                                <%= articulo.precio %> €
+                            </td>
+                            <td>
+                                <%= articulo.categoria %>
+                            </td>
+                            <td>
+                                <!-- Usamos una etiqueta <svg> con una clase y un atributo de datos -->
+                                <svg class="barcode" jsbarcode-format="CODE128"
+                                    jsbarcode-value="<%= articulo.id_producto %>"
+                                    jsbarcode-displayValue="false" jsbarcode-height="50" jsbarcode-width="1">
+                                </svg>
+                            </td>
+                            <td>
+                                <a href="/edit/<%= articulo.id_producto %>"
+                                    class="btn btn-outline-success btn-sm">editar</a>
+                                <a href="/delete/<%= articulo.id_producto %>"
+                                    class="btn btn-outline-danger btn-sm">eliminar</a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
+    <!-- SCRIPT PARA GENERAR LOS CÓDIGOS AL CARGAR LA PÁGINA -->
+    <script>
+        // Seleccionamos todos los SVGs con la clase barcode
+        const barcodes = document.querySelectorAll(".barcode");
+
+        barcodes.forEach(el => {
+            try {
+                JsBarcode(el).init();
+            } catch (error) {
+                console.error("Error generando código para un producto:", error);
+            }
+        });
+    </script>
+</body>
+
+</html>
