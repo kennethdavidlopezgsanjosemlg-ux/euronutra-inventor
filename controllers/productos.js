@@ -2,10 +2,15 @@ const conexion = require('../database/db');
 
 const LIMITE_POR_PAGINA = 10;
 
+function redireccionListado(pagina, busqueda, extra = '') {
+    const buscarParam = busqueda ? `&buscar=${encodeURIComponent(busqueda)}` : '';
+    const extraParam = extra ? `&${extra}` : '';
+    return `/productos?pagina=${pagina}${buscarParam}${extraParam}`;
+}
+
 async function consultarProductos(pagina, busqueda) {
-    const limite = LIMITE_POR_PAGINA;
-    const desde = (pagina - 1) * limite;
-    const hasta = desde + limite - 1;
+    const desde = (pagina - 1) * LIMITE_POR_PAGINA;
+    const hasta = desde + LIMITE_POR_PAGINA - 1;
 
     let consultaConteo = conexion.from('articulo').select('*', {count: 'exact', head: true});
     let consultaDatos = conexion.from('articulo').select('*');
@@ -26,11 +31,11 @@ async function consultarProductos(pagina, busqueda) {
 
     return {
         productos: data,
-        totalPaginas: Math.ceil(count / limite)
+        totalPaginas: Math.ceil(count / LIMITE_POR_PAGINA)
     };
 }
 
-exports.mostrarPagina = async (req, res) => {
+exports.listar = async (req, res) => {
     try {
         const pagina = parseInt(req.query.pagina) || 1;
         const busqueda = req.query.buscar || '';
@@ -45,12 +50,19 @@ exports.mostrarPagina = async (req, res) => {
             error: req.query.error || ''
         });
     } catch (err) {
-        console.error('Error al cargar productos:', err);
+        console.error('Error al listar productos:', err);
         res.status(500).send('Error al cargar productos');
     }
 };
 
-exports.crear = async (req, res) => {
+exports.mostrarCrear = (req, res) => {
+    res.render('producto-crear', {
+        paginaActual: req.query.pagina || 1,
+        busqueda: req.query.buscar || ''
+    });
+};
+
+exports.guardar = async (req, res) => {
     const pagina = req.body.pagina || 1;
     const busqueda = req.body.buscar || '';
 
@@ -60,9 +72,7 @@ exports.crear = async (req, res) => {
     const stock = parseInt(req.body.stock, 10);
 
     if (isNaN(idProducto) || !nombre) {
-        return res.redirect(
-            `/productos?error=datos&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-        );
+        return res.redirect(redireccionListado(pagina, busqueda, 'error=datos'));
     }
 
     try {
@@ -74,26 +84,46 @@ exports.crear = async (req, res) => {
         });
 
         if (error) {
-            console.error('Error al crear producto:', error);
+            console.error('Error al guardar producto:', error);
             const codigo = error.code === '23505' ? 'duplicado' : 'crear';
-            return res.redirect(
-                `/productos?error=${codigo}&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-            );
+            return res.redirect(redireccionListado(pagina, busqueda, `error=${codigo}`));
         }
 
-        res.redirect(
-            `/productos?mensaje=creado&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-        );
+        res.redirect(redireccionListado(pagina, busqueda, 'mensaje=creado'));
     } catch (err) {
-        console.error('Error inesperado al crear producto:', err);
-        res.redirect(
-            `/productos?error=crear&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-        );
+        console.error('Error inesperado al guardar producto:', err);
+        res.redirect(redireccionListado(pagina, busqueda, 'error=crear'));
+    }
+};
+
+exports.mostrarEditar = async (req, res) => {
+    const idProducto = req.params.id_producto;
+
+    try {
+        const {data: producto, error} = await conexion
+            .from('articulo')
+            .select('*')
+            .eq('id_producto', idProducto)
+            .single();
+
+        if (error || !producto) {
+            console.error('Error al obtener producto:', error);
+            return res.status(404).send('Producto no encontrado');
+        }
+
+        res.render('producto-editar', {
+            producto,
+            paginaActual: req.query.pagina || 1,
+            busqueda: req.query.buscar || ''
+        });
+    } catch (err) {
+        console.error('Error inesperado al cargar edición:', err);
+        res.status(500).send('Error al cargar el producto');
     }
 };
 
 exports.actualizar = async (req, res) => {
-    const idProducto = req.params.id;
+    const idProducto = req.body.id_producto;
     const pagina = req.body.pagina || 1;
     const busqueda = req.body.buscar || '';
 
@@ -102,9 +132,7 @@ exports.actualizar = async (req, res) => {
     const stock = parseInt(req.body.stock, 10);
 
     if (!nombre) {
-        return res.redirect(
-            `/productos?error=datos&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-        );
+        return res.redirect(redireccionListado(pagina, busqueda, 'error=datos'));
     }
 
     try {
@@ -119,26 +147,20 @@ exports.actualizar = async (req, res) => {
 
         if (error) {
             console.error('Error al actualizar producto:', error);
-            return res.redirect(
-                `/productos?error=actualizar&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-            );
+            return res.redirect(redireccionListado(pagina, busqueda, 'error=actualizar'));
         }
 
-        res.redirect(
-            `/productos?mensaje=actualizado&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-        );
+        res.redirect(redireccionListado(pagina, busqueda, 'mensaje=actualizado'));
     } catch (err) {
         console.error('Error inesperado al actualizar producto:', err);
-        res.redirect(
-            `/productos?error=actualizar&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-        );
+        res.redirect(redireccionListado(pagina, busqueda, 'error=actualizar'));
     }
 };
 
 exports.eliminar = async (req, res) => {
-    const idProducto = req.params.id;
-    const pagina = req.body.pagina || 1;
-    const busqueda = req.body.buscar || '';
+    const idProducto = req.params.id_producto;
+    const pagina = req.query.pagina || 1;
+    const busqueda = req.query.buscar || '';
 
     try {
         const {error} = await conexion
@@ -148,18 +170,12 @@ exports.eliminar = async (req, res) => {
 
         if (error) {
             console.error('Error al eliminar producto:', error);
-            return res.redirect(
-                `/productos?error=eliminar&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-            );
+            return res.redirect(redireccionListado(pagina, busqueda, 'error=eliminar'));
         }
 
-        res.redirect(
-            `/productos?mensaje=eliminado&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-        );
+        res.redirect(redireccionListado(pagina, busqueda, 'mensaje=eliminado'));
     } catch (err) {
         console.error('Error inesperado al eliminar producto:', err);
-        res.redirect(
-            `/productos?error=eliminar&pagina=${pagina}&buscar=${encodeURIComponent(busqueda)}`
-        );
+        res.redirect(redireccionListado(pagina, busqueda, 'error=eliminar'));
     }
 };

@@ -70,11 +70,13 @@ router.get('/seleccion', (req, res) => {
     res.render('seleccion');
 });
 
-// CRUD de productos
-router.get('/productos', productosController.mostrarPagina);
-router.post('/productos/crear', productosController.crear);
-router.post('/productos/:id/actualizar', productosController.actualizar);
-router.post('/productos/:id/eliminar', productosController.eliminar);
+// CRUD de productos (controlador Node.js)
+router.get('/productos', productosController.listar);
+router.get('/productos/crear', productosController.mostrarCrear);
+router.post('/productos/guardar', productosController.guardar);
+router.get('/productos/editar/:id_producto', productosController.mostrarEditar);
+router.post('/productos/actualizar', productosController.actualizar);
+router.get('/productos/eliminar/:id_producto', productosController.eliminar);
 
 // disminuir stock desde el historial, con el id del producto
 router.get('/disminuir/:id', async (req, res) => {
@@ -111,19 +113,5 @@ router.get('/disminuir/:id', async (req, res) => {
         res.status(500).send('Error al disminuir stock');
     }
 });
-
-// Rutas CRUD de productos
-const crud = require('./controllers/crud');
-
-router.get('/crudProductos', crud.listar);
-router.get('/productos', crud.listar);
-router.get('/create', (req, res) => res.render('create'));
-router.post('/save', crud.save);
-router.post('/update', crud.update);
-router.get('/edit/:id_producto', crud.mostrarEditar);
-router.get('/delete/:id_producto', crud.eliminar);
-router.get('/api/producto/:id', crud.obtenerPorId);
-router.post('/api/producto/registrar', crud.registrarPorEscaneo);
-
 
 module.exports = router;

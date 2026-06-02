@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d6efd">
+    <title>Editar producto - Código de barras</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/historial.css">
+    <link rel="stylesheet" href="/productos.css">
+</head>
+
+<body class="bg-dark text-light min-vh-100">
+
+    <div class="container py-4">
+        <div class="header-container d-flex justify-content-between align-items-center mb-4">
+            <a href="/productos?pagina=<%= paginaActual %>&buscar=<%= busqueda %>" class="btn-icon-circular"
+                title="Volver">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <div class="status-indicator">
+                <span>Editar producto</span>
+            </div>
+            <span style="width: 45px;"></span>
+        </div>
+
+        <div class="card bg-secondary bg-opacity-10 border-secondary">
+            <div class="card-body p-4">
+                <form action="/productos/actualizar" method="POST">
+                    <input type="hidden" name="id_producto" value="<%= producto.id_producto %>">
+                    <input type="hidden" name="pagina" value="<%= paginaActual %>">
+                    <input type="hidden" name="buscar" value="<%= busqueda %>">
+
+                    <div class="mb-3">
+                        <label class="form-label">ID (código de barras)</label>
+                        <input type="text" class="form-control bg-dark text-light border-secondary"
+                            value="<%= producto.id_producto %>" readonly disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control bg-dark text-light border-secondary" id="nombre"
+                            name="nombre" value="<%= producto.nombre %>" required maxlength="200">
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">Categoría</label>
+                        <input type="text" class="form-control bg-dark text-light border-secondary" id="categoria"
+                            name="categoria" value="<%= producto.categoria || '' %>" maxlength="100">
+                    </div>
+                    <div class="mb-4">
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" class="form-control bg-dark text-light border-secondary" id="stock"
+                            name="stock" value="<%= producto.stock %>" min="0" required>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <a href="/productos?pagina=<%= paginaActual %>&buscar=<%= busqueda %>"
+                            class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/pwa-register.js"></script>
+</body>
+
+</html>

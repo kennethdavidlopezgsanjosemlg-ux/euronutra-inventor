@@ -11,7 +11,6 @@ const RUTAS_ESTATICAS = [
   "/escaneo.css",
   "/historial.css",
   "/productos.css",
-  "/productos.js",
   "/seleccion.css",
   "/lectorController.js",
   "/historial.js",
