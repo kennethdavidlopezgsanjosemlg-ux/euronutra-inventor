@@ -15,7 +15,7 @@ function actualizarGuia() {
     } else {
         lectorOperacion.classList.add('scan-restar');
         lectorOperacion.classList.remove('scan-sumar');
-    }
+    } 
 }
 
 operacionRadios.forEach(r => r.addEventListener('change', actualizarGuia));

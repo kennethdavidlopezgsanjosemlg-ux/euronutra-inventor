@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const stockController = require('./controllers/stock');
 const loginController = require('./controllers/login');
+const productosController = require('./controllers/productos');
 const conexion = require('./database/db'); // Importante para la ruta /historial
 
 // Rutas para las operaciones de productos
@@ -68,6 +69,12 @@ router.get('/escaneo', (req, res) => {
 router.get('/seleccion', (req, res) => {
     res.render('seleccion');
 });
+
+// CRUD de productos
+router.get('/productos', productosController.mostrarPagina);
+router.post('/productos/crear', productosController.crear);
+router.post('/productos/:id/actualizar', productosController.actualizar);
+router.post('/productos/:id/eliminar', productosController.eliminar);
 
 // disminuir stock desde el historial, con el id del producto
 router.get('/disminuir/:id', async (req, res) => {

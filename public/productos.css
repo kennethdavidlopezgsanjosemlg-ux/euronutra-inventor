@@ -1,0 +1,20 @@
+.btn-nuevo-producto {
+    border: none;
+    cursor: pointer;
+}
+
+.acciones-crud {
+    white-space: nowrap;
+}
+
+.acciones-crud .btn {
+    margin: 0 2px;
+}
+
+.acciones-crud form {
+    display: inline;
+}
+
+.modal-content .form-control:disabled {
+    opacity: 0.7;
+}

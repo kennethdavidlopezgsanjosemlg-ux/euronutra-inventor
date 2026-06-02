@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d6efd">
+    <title>Productos - Código de barras</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/historial.css">
+    <link rel="stylesheet" href="/productos.css">
+</head>
+
+<body class="bg-dark text-light min-vh-100">
+
+    <div class="container py-4">
+        <div class="header-container d-flex justify-content-between align-items-center mb-4">
+            <a href="/seleccion" class="btn-icon-circular" title="Volver">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <div class="status-indicator">
+                <span>Gestión de Productos</span>
+            </div>
+            <button type="button" class="btn-icon-circular btn-nuevo-producto" title="Nuevo producto"
+                data-bs-toggle="modal" data-bs-target="#modalCrear">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <% const mensajes = {
+            creado: 'Producto creado correctamente',
+            actualizado: 'Producto actualizado correctamente',
+            eliminado: 'Producto eliminado correctamente'
+        }; %>
+        <% const errores = {
+            datos: 'Completa el ID y el nombre del producto',
+            duplicado: 'Ya existe un producto con ese ID',
+            crear: 'No se pudo crear el producto',
+            actualizar: 'No se pudo actualizar el producto',
+            eliminar: 'No se pudo eliminar el producto'
+        }; %>
+
+        <% if (mensaje && mensajes[mensaje]) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= mensajes[mensaje] %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        <% } %>
+        <% if (error && errores[error]) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%= errores[error] %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        <% } %>
+
+        <div class="contenedor-buscador">
+            <input type="text" id="buscador" placeholder="Busca por nombre de producto" value="<%= busqueda %>">
+        </div>
+
+        <div class="mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="h2 text-primary mb-0 d-none d-md-block">Productos</h1>
+            <button type="button" class="btn btn-primary btn-sm d-md-none" data-bs-toggle="modal"
+                data-bs-target="#modalCrear">
+                <i class="fas fa-plus me-1"></i> Nuevo
+            </button>
+        </div>
+
+        <div id="contenedor-productos" class="table-responsive bg-secondary bg-opacity-10 rounded shadow">
+            <table class="table table-dark table-hover mb-0">
+                <thead class="table-primary">
+                    <tr>
+                        <th class="px-4 py-3">ID</th>
+                        <th class="px-4 py-3">Nombre</th>
+                        <th class="px-4 py-3">Categoría</th>
+                        <th class="px-4 py-3">Stock</th>
+                        <th class="px-4 py-3 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% productos.forEach(producto => { %>
+                        <tr class="align-middle" data-id="<%= producto.id_producto %>">
+                            <td class="px-4"><%= producto.id_producto %></td>
+                            <td class="px-4"><%= producto.nombre %></td>
+                            <td class="px-4"><%= producto.categoria || '-' %></td>
+                            <td class="px-4">
+                                <span class="badge bg-primary fs-6"><%= producto.stock %></span>
+                            </td>
+                            <td class="px-4 text-center acciones-crud">
+                                <button type="button" class="btn btn-sm btn-warning btn-editar"
+                                    title="Editar"
+                                    data-id="<%= producto.id_producto %>"
+                                    data-nombre="<%= producto.nombre %>"
+                                    data-categoria="<%= producto.categoria || '' %>"
+                                    data-stock="<%= producto.stock %>"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEditar">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <form action="/productos/<%= producto.id_producto %>/eliminar" method="POST"
+                                    class="d-inline form-eliminar">
+                                    <input type="hidden" name="pagina" value="<%= paginaActual %>">
+                                    <input type="hidden" name="buscar" value="<%= busqueda %>">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <% if (totalPaginas > 1) { %>
+            <nav aria-label="Navegación de productos" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <%= paginaActual === 1 ? 'disabled' : '' %>">
+                        <a class="page-link bg-dark text-light border-secondary"
+                            href="/productos?pagina=<%= paginaActual - 1 %>&buscar=<%= busqueda %>">Anterior</a>
+                    </li>
+                    <% for (let i = 1; i <= totalPaginas; i++) { %>
+                        <li class="page-item <%= paginaActual === i ? 'active' : '' %>">
+                            <a class="page-link <%= paginaActual === i ? 'bg-primary border-primary' : 'bg-dark text-light border-secondary' %>"
+                                href="/productos?pagina=<%= i %>&buscar=<%= busqueda %>">
+                                <%= i %>
+                            </a>
+                        </li>
+                    <% } %>
+                    <li class="page-item <%= paginaActual === totalPaginas ? 'disabled' : '' %>">
+                        <a class="page-link bg-dark text-light border-secondary"
+                            href="/productos?pagina=<%= paginaActual + 1 %>&buscar=<%= busqueda %>">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+        <% } %>
+
+        <% if (productos.length === 0) { %>
+            <div class="text-center text-secondary mt-5 h4">
+                No hay productos registrados
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Modal crear -->
+    <div class="modal fade" id="modalCrear" tabindex="-1" aria-labelledby="modalCrearLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light border-secondary">
+                <form action="/productos/crear" method="POST">
+                    <input type="hidden" name="pagina" value="<%= paginaActual %>">
+                    <input type="hidden" name="buscar" value="<%= busqueda %>">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title" id="modalCrearLabel">Nuevo producto</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="crear-id" class="form-label">ID (código de barras)</label>
+                            <input type="number" class="form-control bg-secondary text-light border-0" id="crear-id"
+                                name="id_producto" required min="1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="crear-nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control bg-secondary text-light border-0" id="crear-nombre"
+                                name="nombre" required maxlength="200">
+                        </div>
+                        <div class="mb-3">
+                            <label for="crear-categoria" class="form-label">Categoría</label>
+                            <input type="text" class="form-control bg-secondary text-light border-0" id="crear-categoria"
+                                name="categoria" maxlength="100">
+                        </div>
+                        <div class="mb-3">
+                            <label for="crear-stock" class="form-label">Stock inicial</label>
+                            <input type="number" class="form-control bg-secondary text-light border-0" id="crear-stock"
+                                name="stock" value="0" min="0">
+                        </div>
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal editar -->
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light border-secondary">
+                <form id="formEditar" action="" method="POST">
+                    <input type="hidden" name="pagina" value="<%= paginaActual %>">
+                    <input type="hidden" name="buscar" value="<%= busqueda %>">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title" id="modalEditarLabel">Editar producto</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">ID</label>
+                            <input type="text" class="form-control bg-secondary text-light border-0" id="editar-id"
+                                readonly disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editar-nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control bg-secondary text-light border-0" id="editar-nombre"
+                                name="nombre" required maxlength="200">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editar-categoria" class="form-label">Categoría</label>
+                            <input type="text" class="form-control bg-secondary text-light border-0"
+                                id="editar-categoria" name="categoria" maxlength="100">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editar-stock" class="form-label">Stock</label>
+                            <input type="number" class="form-control bg-secondary text-light border-0" id="editar-stock"
+                                name="stock" min="0" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/productos.js"></script>
+    <script src="/pwa-register.js"></script>
+</body>
+
+</html>
