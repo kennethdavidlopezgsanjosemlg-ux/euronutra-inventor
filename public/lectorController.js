@@ -106,19 +106,67 @@ async function manejarDeteccion(valor) {
         const operacion = operacionElement ? operacionElement.value : 'sumar';
 
         try {
-            const respuesta = await fetch('/api/actualizar-stock', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ idProducto, operacion })
-            });
+            if (operacion === 'registrar') {
+                const nombre = window.prompt(`Nombre del nuevo producto (ID ${idProducto}):`);
+                if (!nombre || !nombre.trim()) {
+                    mostrarNotificacion('Registro cancelado', 'info');
+                    actualizarStatus('Cancelado');
+                    escaneoBloqueado = false;
+                    return;
+                }
 
-            if (respuesta.ok) {
-                const datos = await respuesta.json();
-                mostrarNotificacion(`ID ${datos.idProducto} actualizado. Stock: ${datos.nuevoStock}`, 'success');
-                actualizarStatus('Escaneado');
+                const precioTexto = window.prompt('Precio del producto:');
+                const precio = parseFloat((precioTexto || '').replace(',', '.'));
+                if (isNaN(precio)) {
+                    mostrarNotificacion('Precio inválido', 'error');
+                    actualizarStatus('Error');
+                    escaneoBloqueado = false;
+                    return;
+                }
+
+                const categoria = window.prompt('Categoría del producto:');
+                if (!categoria || !categoria.trim()) {
+                    mostrarNotificacion('Categoría inválida', 'error');
+                    actualizarStatus('Error');
+                    escaneoBloqueado = false;
+                    return;
+                }
+
+                const respuestaRegistro = await fetch('/api/producto/registrar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({idProducto, nombre, precio, categoria})
+                });
+                const datosRegistro = await respuestaRegistro.json();
+
+                if (respuestaRegistro.ok) {
+                    mostrarNotificacion(
+                        `Producto ${datosRegistro.producto.nombre} (ID ${datosRegistro.producto.id_producto}) registrado`,
+                        'success'
+                    );
+                    actualizarStatus('Registrado');
+                } else if (respuestaRegistro.status === 409) {
+                    mostrarNotificacion(`ID ${idProducto} ya existe`, 'error');
+                    actualizarStatus('Duplicado');
+                } else {
+                    mostrarNotificacion(datosRegistro.error || 'No se pudo registrar', 'error');
+                    actualizarStatus('Error');
+                }
             } else {
-                mostrarNotificacion(`ID ${idProducto} no encontrado`, 'error');
-                actualizarStatus('No encontrado');
+                const respuesta = await fetch('/api/actualizar-stock', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idProducto, operacion })
+                });
+
+                if (respuesta.ok) {
+                    const datos = await respuesta.json();
+                    mostrarNotificacion(`ID ${datos.idProducto} actualizado. Stock: ${datos.nuevoStock}`, 'success');
+                    actualizarStatus('Escaneado');
+                } else {
+                    mostrarNotificacion(`ID ${idProducto} no encontrado`, 'error');
+                    actualizarStatus('No encontrado');
+                }
             }
         } catch {
             mostrarNotificacion('Error de conexión', 'error');

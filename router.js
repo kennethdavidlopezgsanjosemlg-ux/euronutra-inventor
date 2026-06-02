@@ -112,5 +112,18 @@ router.get('/disminuir/:id', async (req, res) => {
     }
 });
 
+// Rutas CRUD de productos
+const crud = require('./controllers/crud');
+
+router.get('/crudProductos', crud.listar);
+router.get('/productos', crud.listar);
+router.get('/create', (req, res) => res.render('create'));
+router.post('/save', crud.save);
+router.post('/update', crud.update);
+router.get('/edit/:id_producto', crud.mostrarEditar);
+router.get('/delete/:id_producto', crud.eliminar);
+router.get('/api/producto/:id', crud.obtenerPorId);
+router.post('/api/producto/registrar', crud.registrarPorEscaneo);
+
 
 module.exports = router;
