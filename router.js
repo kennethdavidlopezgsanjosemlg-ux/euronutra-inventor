@@ -33,7 +33,6 @@ router.get('/historial', async (req, res) => {
         const {count, error: errorConteo} = await consultaConteo;
 
         if (errorConteo) {
-            console.error('Error al contar registros:', errorConteo);
             return res.status(500).send('Error al cargar historial');
         }
 
@@ -44,7 +43,6 @@ router.get('/historial', async (req, res) => {
             .range(desde, hasta);
 
         if (error) {
-            console.error('Error al cargar historial:', error);
             return res.status(500).send('Error fallido al cargar historial');
         }
 
@@ -56,7 +54,6 @@ router.get('/historial', async (req, res) => {
             layout: req.query.ajax ? false : undefined // Esto es para algunos motores, pero en EJS lo manejaremos en la vista o enviando solo el render
         });
     } catch (error) {
-        console.error('Error inesperado al cargar historial:', error);
         res.status(500).send('Error fallido al cargar historial');
     }
 });
@@ -91,7 +88,6 @@ router.get('/disminuir/:id', async (req, res) => {
             .single();
 
         if (errorFetch || !producto) {
-            console.error('Error al obtener el producto:', errorFetch);
             return res.status(404).send('Producto no encontrado');
         }
 
@@ -102,7 +98,6 @@ router.get('/disminuir/:id', async (req, res) => {
             .eq('id_producto', idProducto);
 
         if (errorUpdate) {
-            console.error('Error al disminuir stock:', errorUpdate);
             return res.status(500).send(
                 `Error al disminuir stock: ${errorUpdate.message} (${errorUpdate.code || 'sin código'})`
             );
@@ -110,7 +105,6 @@ router.get('/disminuir/:id', async (req, res) => {
 
         res.redirect(`/historial?pagina=${req.query.pagina || 1}&buscar=${req.query.buscar || ''}`);
     } catch (error) {
-        console.error('Error inesperado al disminuir stock:', error);
         res.status(500).send('Error al disminuir stock');
     }
 });

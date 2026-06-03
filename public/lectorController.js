@@ -6,6 +6,7 @@ const statusText = document.getElementById('status-text');
 const lectorOperacion = document.querySelector('.scanner-guide');
 const operacionRadios = document.querySelectorAll('input[name="operacion"]');
 
+// Función para actualizar la guía de escaneo según la operación seleccionada
 function actualizarGuia() {
     if (!lectorOperacion) return;
     const operacion = document.querySelector('input[name="operacion"]:checked').value;
@@ -17,7 +18,7 @@ function actualizarGuia() {
         lectorOperacion.classList.remove('scan-sumar');
     } 
 }
-
+// Agregar evento a los radios para actualizar la guía al cambiar la operación
 operacionRadios.forEach(r => r.addEventListener('change', actualizarGuia));
 
 let escaneoBloqueado = false;
