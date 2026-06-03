@@ -1,10 +1,5 @@
-const VERSION_CACHE = "euronutra-pwa-v1";
+const VERSION_CACHE = "euronutra-pwa-v2";
 const RUTAS_ESTATICAS = [
-  "/",
-  "/seleccion",
-  "/escaneo",
-  "/historial",
-  "/productos",
   "/manifest.webmanifest",
   "/icono-pwa.svg",
   "/login.css",
@@ -37,23 +32,50 @@ self.addEventListener("activate", (evento) => {
   self.clients.claim();
 });
 
+function esActivoEstatico(request) {
+  return [
+    ".css",
+    ".js",
+    ".webmanifest",
+    ".svg",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".ico"
+  ].some((ext) => request.url.endsWith(ext));
+}
+
 self.addEventListener("fetch", (evento) => {
   if (evento.request.method !== "GET") return;
 
-  evento.respondWith(
-    caches.match(evento.request).then((respuestaCache) => {
-      if (respuestaCache) return respuestaCache;
+  const url = new URL(evento.request.url);
 
-      return fetch(evento.request)
+  if (evento.request.mode === "navigate" || evento.request.headers.get("accept")?.includes("text/html")) {
+    evento.respondWith(
+      fetch(evento.request)
         .then((respuestaRed) => {
-          const url = new URL(evento.request.url);
-          if (url.origin === self.location.origin) {
-            const copia = respuestaRed.clone();
-            caches.open(VERSION_CACHE).then((cache) => cache.put(evento.request, copia));
-          }
           return respuestaRed;
         })
-        .catch(() => caches.match("/"));
-    })
-  );
+        .catch(() => caches.match(evento.request).then((respuestaCache) => respuestaCache || caches.match("/")))
+    );
+    return;
+  }
+
+  if (esActivoEstatico(evento.request)) {
+    evento.respondWith(
+      caches.match(evento.request).then((respuestaCache) => {
+        if (respuestaCache) return respuestaCache;
+
+        return fetch(evento.request).then((respuestaRed) => {
+          const copia = respuestaRed.clone();
+          caches.open(VERSION_CACHE).then((cache) => cache.put(evento.request, copia));
+          return respuestaRed;
+        });
+      })
+    );
+    return;
+  }
+
+  evento.respondWith(fetch(evento.request).catch(() => caches.match(evento.request)));
 });
