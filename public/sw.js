@@ -1,4 +1,4 @@
-const VERSION_CACHE = "euronutra-pwa-v3";
+const VERSION_CACHE = "euronutra-pwa-v2";
 const RUTAS_ESTATICAS = [
   "/manifest.webmanifest",
   "/icono-pwa.svg",
