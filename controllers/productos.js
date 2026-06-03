@@ -1,6 +1,5 @@
 const conexion = require('../database/db');
-
-const LIMITE_POR_PAGINA = 10;
+const LIMITE_POR_PAGINA = 10; // Constante para el número de productos por página
 
 function redireccionListado(pagina, busqueda, extra = '') {
     const buscarParam = busqueda ? `&buscar=${encodeURIComponent(busqueda)}` : '';
@@ -8,6 +7,7 @@ function redireccionListado(pagina, busqueda, extra = '') {
     return `/productos?pagina=${pagina}${buscarParam}${extraParam}`;
 }
 
+// Función para consultar productos con paginación
 async function consultarProductos(pagina, busqueda) {
     const desde = (pagina - 1) * LIMITE_POR_PAGINA;
     const hasta = desde + LIMITE_POR_PAGINA - 1;
@@ -35,6 +35,7 @@ async function consultarProductos(pagina, busqueda) {
     };
 }
 
+// Controladores para productos
 exports.listar = async (req, res) => {
     try {
         const pagina = parseInt(req.query.pagina) || 1;
@@ -50,13 +51,14 @@ exports.listar = async (req, res) => {
             error: req.query.error || ''
         });
     } catch (err) {
-        console.error('Error al listar productos:', err);
         res.status(500).send('Error al cargar productos');
     }
 };
 
+// Controladores para crear, editar, eliminar productos
+
 exports.mostrarCrear = (req, res) => {
-    res.render('producto-crear', {
+    res.render('crear-producto', {
         paginaActual: req.query.pagina || 1,
         busqueda: req.query.buscar || ''
     });
@@ -84,14 +86,12 @@ exports.guardar = async (req, res) => {
         });
 
         if (error) {
-            console.error('Error al guardar producto:', error);
             const codigo = error.code === '23505' ? 'duplicado' : 'crear';
             return res.redirect(redireccionListado(pagina, busqueda, `error=${codigo}`));
         }
 
         res.redirect(redireccionListado(pagina, busqueda, 'mensaje=creado'));
     } catch (err) {
-        console.error('Error inesperado al guardar producto:', err);
         res.redirect(redireccionListado(pagina, busqueda, 'error=crear'));
     }
 };
@@ -107,21 +107,45 @@ exports.mostrarEditar = async (req, res) => {
             .single();
 
         if (error || !producto) {
-            console.error('Error al obtener producto:', error);
             return res.status(404).send('Producto no encontrado');
         }
 
-        res.render('producto-editar', {
+        res.render('editar-producto', {
             producto,
             paginaActual: req.query.pagina || 1,
             busqueda: req.query.buscar || ''
         });
     } catch (err) {
-        console.error('Error inesperado al cargar edición:', err);
         res.status(500).send('Error al cargar el producto');
     }
 };
 
+// Controlador para verificar si un ID de producto existe
+exports.verificarIdProducto = async (req, res) => {
+    const idProducto = parseInt(req.query.id, 10);
+
+    if (isNaN(idProducto)) {
+        return res.status(400).json({error: 'ID inválido'});
+    }
+
+    try {
+        const {data: producto, error} = await conexion
+            .from('articulo')
+            .select('id_producto')
+            .eq('id_producto', idProducto)
+            .maybeSingle();
+
+        if (error) {
+            return res.status(500).json({error: 'Error al verificar ID'});
+        }
+
+        res.json({exists: !!producto});
+    } catch (err) {
+        res.status(500).json({error: 'Error interno'});
+    }
+};
+
+// Controlador para actualizar un producto
 exports.actualizar = async (req, res) => {
     const idProducto = req.body.id_producto;
     const pagina = req.body.pagina || 1;
@@ -146,17 +170,16 @@ exports.actualizar = async (req, res) => {
             .eq('id_producto', idProducto);
 
         if (error) {
-            console.error('Error al actualizar producto:', error);
             return res.redirect(redireccionListado(pagina, busqueda, 'error=actualizar'));
         }
 
         res.redirect(redireccionListado(pagina, busqueda, 'mensaje=actualizado'));
     } catch (err) {
-        console.error('Error inesperado al actualizar producto:', err);
         res.redirect(redireccionListado(pagina, busqueda, 'error=actualizar'));
     }
 };
 
+// Controlador para eliminar un producto
 exports.eliminar = async (req, res) => {
     const idProducto = req.params.id_producto;
     const pagina = req.query.pagina || 1;
@@ -169,13 +192,11 @@ exports.eliminar = async (req, res) => {
             .eq('id_producto', idProducto);
 
         if (error) {
-            console.error('Error al eliminar producto:', error);
             return res.redirect(redireccionListado(pagina, busqueda, 'error=eliminar'));
         }
 
         res.redirect(redireccionListado(pagina, busqueda, 'mensaje=eliminado'));
     } catch (err) {
-        console.error('Error inesperado al eliminar producto:', err);
         res.redirect(redireccionListado(pagina, busqueda, 'error=eliminar'));
     }
 };

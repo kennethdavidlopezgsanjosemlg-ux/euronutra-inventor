@@ -7,11 +7,13 @@ const RUTAS_ESTATICAS = [
   "/historial.css",
   "/productos.css",
   "/seleccion.css",
+  "/crear-producto.css",
   "/lectorController.js",
   "/historial.js",
   "/pwa-register.js"
 ];
 
+// Instala el service worker y cachea los recursos estáticos
 self.addEventListener("install", (evento) => {
   evento.waitUntil(
     caches.open(VERSION_CACHE).then((cache) => cache.addAll(RUTAS_ESTATICAS))
@@ -19,6 +21,7 @@ self.addEventListener("install", (evento) => {
   self.skipWaiting();
 });
 
+// Elimina caches antiguas al activar el nuevo service worker
 self.addEventListener("activate", (evento) => {
   evento.waitUntil(
     caches.keys().then((claves) =>
@@ -32,6 +35,7 @@ self.addEventListener("activate", (evento) => {
   self.clients.claim();
 });
 
+// Función para determinar si la solicitud es para un recurso estático
 function esActivoEstatico(request) {
   return [
     ".css",
@@ -46,6 +50,7 @@ function esActivoEstatico(request) {
   ].some((ext) => request.url.endsWith(ext));
 }
 
+// Intercepta las solicitudes de red
 self.addEventListener("fetch", (evento) => {
   if (evento.request.method !== "GET") return;
 

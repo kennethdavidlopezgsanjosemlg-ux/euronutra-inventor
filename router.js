@@ -8,6 +8,7 @@ const conexion = require('./database/db'); // Importante para la ruta /historial
 // Rutas para las operaciones de productos
 router.get('/api/productos', stockController.obtenerProductos);
 router.post('/api/actualizar-stock', stockController.actualizarStock);
+router.get('/api/producto-existe', productosController.verificarIdProducto);
 router.post('/login', loginController.iniciarSesion);
 
 

@@ -1,6 +1,7 @@
 const ordenarItems = document.querySelectorAll('.orden-item');
 const tbody = document.querySelector('#contenedor-productos tbody');
 
+// Función para ordenar las filas de la tabla
 function sortRows(criteria) {
     const rows = Array.from(tbody.querySelectorAll('tr'));
     rows.sort((a, b) => {
@@ -21,6 +22,8 @@ ordenarItems.forEach(item => {
         sortRows(item.dataset.sort);
     });
 });
+
+// Función para manejar la búsqueda en tiempo real
 
 const buscador = document.getElementById('buscador');
 let timeoutBusqueda;
@@ -88,9 +91,8 @@ buscador.addEventListener('input', function () {
             });
 
         } catch (error) {
-            console.error('Error al buscar productos:', error);
         }
-    }, 400); // 400ms de debounce para no saturar el servidor
+    }, 400); // 400ms de couldown para no saturar el servidor
 });
 
 // Posicionar el cursor al final del texto en el buscador al cargar si hay búsqueda
