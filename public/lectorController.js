@@ -57,43 +57,61 @@ function mostrarNotificacion(mensaje, tipo = 'success') {
     }, 4000);
 }
 
-function iniciarEscaner() {
-    lector = new Html5Qrcode('lector');
-    actualizarStatus('Iniciando...');
+async function iniciarEscaner() {
+    if (!lector) {
+        lector = new Html5Qrcode('lector');
+    }
 
-    // Configuración de cámara
+    actualizarStatus('Iniciando...');
+    lectorPlaceholder.style.display = 'none';
+
     const configuracion = {
         fps: 15,
         qrbox: { width: 250, height: 250 },
         aspectRatio: 1.0,
         showQrRegionImg: false
     };
+
     const alDetectar = (texto) => {
         if (escaneoBloqueado) return;
         manejarDeteccion(texto);
     };
 
-    // Intentamos iniciar con la cámara trasera, si falla intentamos con la frontal
-    lector.start(
-        { facingMode: 'environment' },
-        configuracion,
-        alDetectar,
-        () => { }
-    ).then(() => {
-        actualizarStatus('Cámara activa');
-    }).catch(() => {
-        lector.start(
-            { facingMode: 'user' },
+    try {
+        await lector.start(
+            { facingMode: 'environment' },
             configuracion,
             alDetectar,
             () => { }
-        ).then(() => {
+        );
+        actualizarStatus('Cámara activa');
+    } catch (error) {
+        console.warn('Fallo cámara trasera, probando frontal:', error);
+        try {
+            await lector.start(
+                { facingMode: 'user' },
+                configuracion,
+                alDetectar,
+                () => { }
+            );
             actualizarStatus('Cámara activa');
-        }).catch((error) => {
-            console.error(error);
-            actualizarStatus('Error');
-        });
-    });
+        } catch (error2) {
+            console.error('No se pudo iniciar la cámara:', error2);
+            lectorPlaceholder.style.display = 'flex';
+            actualizarStatus('Error al activar cámara');
+        }
+    }
+}
+
+async function detenerEscaner() {
+    if (!lector) return;
+
+    try {
+        await lector.stop();
+        await lector.clear();
+    } catch (error) {
+        console.error('Error al detener el escáner:', error);
+    }
 }
 
 async function manejarDeteccion(valor) {
@@ -186,24 +204,26 @@ const lectorPlaceholder = document.getElementById('lector-placeholder');
 
 toggleCamara.addEventListener('change', async function () {
     if (!this.checked) {
-        if (lector) {
-            actualizarStatus('Apagado');
-            await lector.stop().catch(err => console.error("Error al detener:", err));
-        }
+        actualizarStatus('Apagado');
+        await detenerEscaner();
         lectorPlaceholder.style.display = 'flex';
     } else {
         lectorPlaceholder.style.display = 'none';
-        iniciarEscaner();
+        await iniciarEscaner();
     }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     actualizarGuia();
     if (toggleCamara.checked) {
         lectorPlaceholder.style.display = 'none';
-        iniciarEscaner();
+        await iniciarEscaner();
     } else {
         lectorPlaceholder.style.display = 'flex';
         actualizarStatus('Apagado');
     }
+});
+
+window.addEventListener('pagehide', async () => {
+    await detenerEscaner();
 });
