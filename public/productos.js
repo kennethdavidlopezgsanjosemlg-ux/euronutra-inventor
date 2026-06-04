@@ -65,6 +65,13 @@
         const nav = link.closest('nav[aria-label="Navegación de productos"]');
         if (!nav) return;
 
+        // Prevenir click en página actual o deshabilitada
+        const liItem = link.closest('li.page-item');
+        if (liItem && (liItem.classList.contains('active') || liItem.classList.contains('disabled'))) {
+            e.preventDefault();
+            return;
+        }
+
         // Prevent default navigation and load via AJAX
         e.preventDefault();
 
@@ -80,15 +87,5 @@
         setTimeout(() => {
             nav.querySelectorAll('a.page-link').forEach(a => a.classList.remove('disabled'));
         }, 2000);
-    });
-
-    // Prefetch on hover for perceived speed
-    let prefetchCache = new Set();
-    document.addEventListener('mouseover', (e) => {
-        const link = e.target.closest('a.page-link');
-        if (!link) return;
-        if (prefetchCache.has(link.href)) return;
-        prefetchCache.add(link.href);
-        fetch(link.href, { credentials: 'same-origin' }).then(() => {}).catch(()=>{});
     });
 })();
