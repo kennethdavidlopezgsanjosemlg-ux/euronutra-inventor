@@ -48,81 +48,39 @@ body {
 
 @media (max-width: 768px) {
     .table-responsive {
-        overflow-x: hidden;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         max-width: 100%;
         width: 100%;
         min-width: 0;
     }
 
-    table,
-    thead,
-    tbody,
+    table {
+        width: auto;
+        min-width: 100%;
+    }
+
     th,
-    td,
-    tr {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-    }
-
-    thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-
-    tr {
-        margin-bottom: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 0.85rem;
-        background: rgba(255, 255, 255, 0.03);
-        padding: 0.75rem 0.75rem 0.5rem;
-        box-sizing: border-box;
+    td {
+        white-space: nowrap;
     }
 
     td {
-        position: relative;
-        display: block;
-        width: 100%;
-        padding: 0.5rem 1rem;
-        text-align: left;
-        white-space: normal;
-        word-break: break-word;
-        overflow-wrap: anywhere;
-        border: none;
-        box-sizing: border-box;
-    }
-
-    td::before {
-        position: static;
-        display: block;
-        margin-bottom: 0.35rem;
-        width: auto;
-        padding: 0;
-        white-space: normal;
-        word-break: break-word;
-        font-weight: 700;
-        color: #94a3b8;
-        content: attr(data-label);
-    }
-
-    td:last-child {
-        padding-bottom: 0.75rem;
+        padding: 0.75rem 0.85rem;
+        word-break: normal;
     }
 
     .acciones-crud,
     .text-center {
         text-align: left !important;
-        white-space: normal !important;
-        word-break: break-word;
+        white-space: nowrap !important;
     }
 
     .acciones-crud .btn,
     .boton-disminuir {
-        display: block;
-        width: 100%;
-        margin: 0.35rem 0;
+        display: inline-flex;
+        width: auto;
+        margin: 0 0.25rem 0 0;
     }
 
     nav[aria-label^="Navegación de"] {
@@ -137,6 +95,7 @@ body {
 
     nav[aria-label^="Navegación de"] .pagination {
         display: inline-flex;
+        justify-content: flex-start !important;
         flex-wrap: nowrap;
         white-space: nowrap;
         min-width: max-content;
