@@ -49,11 +49,11 @@
                 pagActual.remove();
             }
 
-            // Re-attach any event handlers if needed (none for now)
+            // Rehabilitar enlaces después de cargar nueva página
 
         } catch (err) {
             console.error('Error cargando página:', err);
-            window.location.href = url; // fallback a navegación normal
+            window.location.href = url; // Fallback a navegación normal si falla la carga asíncrona
         } finally {
             hideOverlay();
         }
@@ -72,18 +72,18 @@
             return;
         }
 
-        // Prevent default navigation and load via AJAX
+        // Prevent default navigation and show loading state
         e.preventDefault();
 
-        // Disable pointer events to avoid multiple clicks
+        // Deshabilitar enlaces para evitar múltiples clicks
         nav.querySelectorAll('a.page-link').forEach(a => a.classList.add('disabled'));
 
-        // Blur to remove blue focus box
+        // Quitar foco para evitar que quede resaltado el enlace
         if (document.activeElement) document.activeElement.blur();
 
         fetchAndReplace(link.href);
 
-        // Re-enable after a short delay (UI will update on success)
+        // Rehabilitar enlaces después de un tiempo (en caso de que algo falle)
         setTimeout(() => {
             nav.querySelectorAll('a.page-link').forEach(a => a.classList.remove('disabled'));
         }, 2000);

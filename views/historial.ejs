@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0d6efd">
     <title>Historial - Código de barras</title>
     <link rel="manifest" href="/manifest.webmanifest">
@@ -60,21 +60,21 @@
                 <tbody>
                     <% articulos.forEach(articulo=> { %>
                         <tr id="row-<%= articulo.id_producto %>" class="align-middle" data-stock="<%= articulo.stock %>" data-id="<%= articulo.id_producto %>">
-                            <td class="px-4">
+                            <td class="px-4" data-label="ID">
                                 <%= articulo.id_producto %>
                             </td>
-                            <td class="px-4">
+                            <td class="px-4" data-label="Nombre">
                                 <%= articulo.nombre %>
                             </td>
-                            <td class="px-4">
+                            <td class="px-4" data-label="Categoría">
                                 <%= articulo.categoria || '-' %>
                             </td>
-                            <td class="px-4">
+                            <td class="px-4" data-label="Stock">
                                 <span class="badge bg-primary fs-6" id="stock-<%= articulo.id_producto %>">
                                     <%= articulo.stock %>
                                 </span>
                             </td>
-                            <td class="px-4 text-center">
+                            <td class="px-4 text-center" data-label="Quitar Stock">
                                 <a href="/disminuir/<%= articulo.id_producto %>?pagina=<%= paginaActual %>&buscar=<%= busqueda %>"
                                     class="btn btn-sm btn-danger boton-disminuir" data-id="<%= articulo.id_producto %>">
                                     -1

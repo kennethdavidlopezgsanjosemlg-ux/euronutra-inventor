@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0d6efd">
     <title>Productos - Código de barras</title>
     <link rel="manifest" href="/manifest.webmanifest">
@@ -61,10 +61,6 @@
 
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <h1 class="h2 text-primary mb-0 d-none d-md-block">Productos</h1>
-            <a href="/productos/crear?pagina=<%= paginaActual %>&buscar=<%= busqueda %>"
-                class="btn btn-primary btn-sm d-md-none">
-                <i class="fas fa-plus me-1"></i> Nuevo
-            </a>
         </div>
 
         <div id="contenedor-productos" class="table-responsive bg-secondary bg-opacity-10 rounded shadow">
@@ -81,13 +77,13 @@
                 <tbody>
                     <% productos.forEach(producto => { %>
                         <tr class="align-middle">
-                            <td class="px-4"><%= producto.id_producto %></td>
-                            <td class="px-4"><%= producto.nombre %></td>
-                            <td class="px-4"><%= producto.categoria || '-' %></td>
-                            <td class="px-4">
+                            <td class="px-4" data-label="ID"><%= producto.id_producto %></td>
+                            <td class="px-4" data-label="Nombre"><%= producto.nombre %></td>
+                            <td class="px-4" data-label="Categoría"><%= producto.categoria || '-' %></td>
+                            <td class="px-4" data-label="Stock">
                                 <span class="badge bg-primary fs-6"><%= producto.stock %></span>
                             </td>
-                            <td class="px-4 text-center acciones-crud">
+                            <td class="px-4 text-center acciones-crud" data-label="Acciones">
                                 <a href="/productos/editar/<%= producto.id_producto %>?pagina=<%= paginaActual %>&buscar=<%= busqueda %>"
                                     class="btn btn-sm btn-warning" title="Editar">
                                     <i class="fas fa-pen"></i>
