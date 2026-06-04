@@ -7,27 +7,30 @@
     let busquedaActual = buscador.value;
 
     function showOverlay() {
-        let overlay = document.getElementById('historial-loading-overlay');
-        if (!overlay) {
-            overlay = document.createElement('div');
-            overlay.id = 'historial-loading-overlay';
-            overlay.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>';
-            overlay.style.position = 'absolute';
-            overlay.style.inset = '0';
-            overlay.style.display = 'flex';
-            overlay.style.alignItems = 'center';
-            overlay.style.justifyContent = 'center';
-            overlay.style.background = 'rgba(0,0,0,0.35)';
-            overlay.style.zIndex = '999';
-            contenedor.style.position = 'relative';
-            contenedor.appendChild(overlay);
-        }
+        // Remover overlay anterior si existe
+        const oldOverlay = document.getElementById('historial-loading-overlay');
+        if (oldOverlay) oldOverlay.remove();
+        
+        // Crear nuevo overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'historial-loading-overlay';
+        overlay.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>';
+        overlay.style.position = 'absolute';
+        overlay.style.inset = '0';
         overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.background = 'rgba(0,0,0,0.35)';
+        overlay.style.zIndex = '999';
+        contenedor.style.position = 'relative';
+        contenedor.appendChild(overlay);
     }
 
     function hideOverlay() {
         const overlay = document.getElementById('historial-loading-overlay');
-        if (overlay) overlay.style.display = 'none';
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
     }
 
     async function fetchAndReplace(url) {
@@ -41,14 +44,8 @@
             const nuevaTabla = temp.querySelector('#contenedor-productos');
             if (nuevaTabla && contenedor) {
                 contenedor.innerHTML = nuevaTabla.innerHTML;
-                // Actualizar referencia al tbody después de reemplazar
-                const newTbody = document.querySelector('#contenedor-productos tbody');
-                if (newTbody) {
-                    Object.defineProperty(tbody, 'innerHTML', {
-                        get() { return newTbody.innerHTML; },
-                        set(val) { newTbody.innerHTML = val; }
-                    });
-                }
+                // Recrear el overlay después de actualizar el HTML
+                showOverlay();
             }
 
             const nuevaPaginacion = temp.querySelector('nav[aria-label="Navegación de historial"]');
