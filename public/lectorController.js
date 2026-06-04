@@ -85,6 +85,7 @@ async function iniciarEscaner() {
             () => { }
         );
         actualizarStatus('Cámara activa');
+        initZoom('lector','zoom-range-escaneo','zoom-control-escaneo');
     } catch (error) {
         console.warn('Fallo cámara trasera, probando frontal:', error);
         try {
@@ -95,12 +96,60 @@ async function iniciarEscaner() {
                 () => { }
             );
             actualizarStatus('Cámara activa');
+            initZoom('lector','zoom-range-escaneo','zoom-control-escaneo');
         } catch (error2) {
             console.error('No se pudo iniciar la cámara:', error2);
             lectorPlaceholder.style.display = 'flex';
             actualizarStatus('Error al activar cámara');
         }
     }
+}
+
+function initZoom(containerId, sliderId, wrapperId) {
+    const slider = document.getElementById(sliderId);
+    const wrapper = document.getElementById(wrapperId);
+    if (!slider || !wrapper) return;
+    wrapper.style.display = 'none';
+
+    const trySetup = () => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const video = container.querySelector('video');
+        if (!video || !video.srcObject) {
+            setTimeout(trySetup, 400);
+            return;
+        }
+        const track = video.srcObject.getVideoTracks()[0];
+        if (!track || !track.getCapabilities) {
+            wrapper.style.display = 'none';
+            return;
+        }
+        const caps = track.getCapabilities();
+        if (caps.zoom === undefined) {
+            wrapper.style.display = 'none';
+            return;
+        }
+
+        const min = caps.zoom.min || 1;
+        const max = caps.zoom.max || 1;
+        const step = caps.zoom.step || 0.1;
+        slider.min = min;
+        slider.max = max;
+        slider.step = step;
+        slider.value = Math.max(min, Math.min(max, min));
+        wrapper.style.display = 'flex';
+
+        slider.addEventListener('input', async (e) => {
+            const value = parseFloat(e.target.value);
+            try {
+                await track.applyConstraints({ advanced: [{ zoom: value }] });
+            } catch (err) {
+                try { await track.applyConstraints({ zoom: value }); } catch (_) {}
+            }
+        });
+    };
+
+    trySetup();
 }
 
 async function detenerEscaner() {
@@ -112,6 +161,8 @@ async function detenerEscaner() {
     } catch (error) {
         console.error('Error al detener el escáner:', error);
     }
+    const wrapper = document.getElementById('zoom-control-escaneo');
+    if (wrapper) wrapper.style.display = 'none';
 }
 
 async function manejarDeteccion(valor) {

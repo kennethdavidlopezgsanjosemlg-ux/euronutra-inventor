@@ -18,3 +18,19 @@
 .modal-content .form-control:disabled {
     opacity: 0.7;
 }
+
+/* Quitar recuadro azul de foco en paginación y estilo de carga */
+.pagination .page-link:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.pagination .page-link.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+#productos-loading-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
