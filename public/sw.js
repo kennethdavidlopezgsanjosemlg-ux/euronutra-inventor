@@ -1,4 +1,4 @@
-const VERSION_CACHE = "euronutra-pwa-v2";
+const VERSION_CACHE = "euronutra-pwa-v3";
 const RUTAS_ESTATICAS = [
   "/manifest.webmanifest",
   "/icono-pwa.svg",
@@ -69,15 +69,13 @@ self.addEventListener("fetch", (evento) => {
 
   if (esActivoEstatico(evento.request)) {
     evento.respondWith(
-      caches.match(evento.request).then((respuestaCache) => {
-        if (respuestaCache) return respuestaCache;
-
-        return fetch(evento.request).then((respuestaRed) => {
+      fetch(evento.request)
+        .then((respuestaRed) => {
           const copia = respuestaRed.clone();
           caches.open(VERSION_CACHE).then((cache) => cache.put(evento.request, copia));
           return respuestaRed;
-        });
-      })
+        })
+        .catch(() => caches.match(evento.request))
     );
     return;
   }
